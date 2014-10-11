@@ -9,11 +9,21 @@ On reçoit :
 accesElement(1,X,[X|_]).
 accesElement(N,X,[T|Q]) :- accesElement(N1,X,Q), N is N1+1.
 
-decrement(0,0,[Vo,O],[Vn,N]) :- Vn is Vo-1.
-decrement(0,J,O,N) :-. % non fini
-decrement(C,J,[Ho|O],[Hn,N]) :- C1 is C-1, decrement(C1,J,O,N), Hn is Ho.
-%incrementList(L,M,NJ,E):-
+%Retrait du pion joué par le joueur J de la colonne C du plateau.
+%[HO|O] représente le plateau avant déplacement du pion joué
+%[Hn|N] représente le plateau après le retrait du pion
+decrement(0,[Ho,Qo],[Hn,Qn]) :- Hn is Ho-1, Qn is Qo.
+decrement(1,[Ho,Qo],[Hn,Qn]) :- Qn is Qo-1, Hn is Ho.
+decrement(0,J,[Vo|O],[Vn|N]) :- decrement(J,Vo,Vn), N is O.
+decrement(C,J,[Ho|O],[Hn|N]) :- C1 is C-1, decrement(C1,J,O,N), Hn is Ho.
 
+%Placement du pion joué par le joueur J à la colonne C du plateau.
+%[HO|O] représente le plateau avant déplacement du pion joué
+%[Hn|N] représente le plateau après ajout du pion à l'endroit voulu.
+%increment(0,[Ho,Qo],[Hn,Qn]) :- Hn is Ho+1, Qn is Qo.
+%increment(1,[Ho,Qo],[Hn,Qn]) :- Qn is Qo+1, Hn is Ho.
+%increment(0,J,[Vo|O],[Vn|N]) :- increment(J,Vo,Vn), N is O.
+%increment(C,J,[Ho|O],[Hn|N]):- C1 is C-1, increment(C1,J,O,N), Hn is Ho.
 
 
 %modifier(Lplateau, numéro action, numéro joueur, LdéplacementTODO, CP, LNouveauPlateau)
