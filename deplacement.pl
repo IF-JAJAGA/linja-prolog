@@ -1,3 +1,20 @@
+/*	TOREAD : tests pour modifier :
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,1], [1,2]], 2, LNpl).
+LNpl = [[1, 2], [1, 4], [6, 6], [8, 8]] .
+
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,1], [1,1]], 2, LNpl).
+LNpl = [[1, 2], [1, 4], [7, 6], [7, 8]] .
+
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,2], [1,2], [1,2]], 3, LNpl).
+LNpl = [[1, 2], [0, 4], [5, 6], [10, 8]] .
+
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,2], [1,2], [1,2], [1,2]], 4, LNpl).
+LNpl = [[1, 2], [-1, 4], [5, 6], [11, 8]] .
+
+!!! On ne contrôle pas si les pions passent en négatif.
+
+*/
+
 /*
 On reçoit : 
 	- le numéro du joueur
@@ -12,7 +29,7 @@ accesElement(N,X,[_|Q]) :- accesElement(N1,X,Q), N is N1+1.
 %copy : copie la première liste dans la deuxième.
 copy([], []).
 copy([H|[]], [H|[]]).
-copy([H|Qo],[H|Qn]) :- copy(-1,Qo,Qn).
+copy([H|Qo],[H|Qn]) :- copy(Qo,Qn).
 
 
 %Retrait du pion joué par le joueur J de la colonne C du plateau.
@@ -52,20 +69,37 @@ increment(C,J,[H|O],[H|N]) :- C1 is C-1, increment(C1,J,O,N).
 				appel modifier avec nouveau CP et queue de LdéplacementTODO.
 exemple de LDeplacementTODO : [[0,2],[1,1]]
 */
+%% findCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre de coups restants.
+%findCP(-2, [H|[]], H). 
+findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2.
+findCP(0, [H|_], CP) :- findCP(H, CP).
+findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
+
 elem1([X|_],X).
 elem2([_|Q], X) :- elem1(Q,X).
-modifier(Lpl, 0, J, [L1|Qtodo], CP, LNpl) :- 	elem1(L1,C1),
+modifier(Lpl, 0, J, [L1|[]], CP, LNpl) :- 	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf),
 						elem2(L1, C2),
-						increment(C1+C2, J, Lbuf, LNpl),
-						CP is CP-C2.
+						Cend = C1+C2,
+						increment(Cend, J, Lbuf, LNpl),
+						findCP(Cend, LNpl, CP).
+
+
+modifier(Lpl, _, J, [L1|[]], 1, LNpl) :-	elem1(L1,C1),
+						decrement(C1, J, Lpl, Lbuf1),elem2(L1, C2),
+						elem2(L1, C2),
+						Cend = C1+C2,
+						increment(Cend, J, Lbuf1, Lbuf2),
+						copy(Lbuf2, LNpl).
 
 modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf1),
 						elem2(L1, C2),
-						increment(C1+C2, J, Lbuf1, Lbuf2),
-						CP is CP-C2.
-						modifier(Lbuf2, ).
+						Cend = C1+C2,
+						increment(Cend, J, Lbuf1, Lbuf2),
+						CP1 is CP-1,
+						modifier(Lbuf2, Ac, J, Qtodo, CP1, Lbuf3),
+						copy(Lbuf3, LNpl).
 
 /*
 %fin de la deuxième action
