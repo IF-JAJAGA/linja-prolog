@@ -12,6 +12,7 @@ LNpl = [[1, 2], [0, 4], [5, 6], [10, 8]] .
 LNpl = [[1, 2], [-1, 4], [5, 6], [11, 8]] .
 
 !!! On ne contrôle pas si les pions passent en négatif.
+!!! Est-ce qu'on fait attention si modifier est appelée avec Ac = 0 et la liste des déplacements plus grande que 1 ?
 
 */
 
@@ -77,25 +78,25 @@ findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
 
 elem1([X|_],X).
 elem2([_|Q], X) :- elem1(Q,X).
-modifier(Lpl, 0, J, [L1|[]], CP, LNpl) :- 	elem1(L1,C1),
+modifier(Lpl, 0, J, [L1|[]], _, LNpl) :- 	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf),
 						elem2(L1, C2),
-						Cend = C1+C2,
-						increment(Cend, J, Lbuf, LNpl),
-						findCP(Cend, LNpl, CP).
+						Cend is C1+C2,
+						increment(Cend, J, Lbuf, LNpl).
+						%findCP(Cend, LNpl, CP).
 
 
 modifier(Lpl, _, J, [L1|[]], 1, LNpl) :-	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf1),elem2(L1, C2),
 						elem2(L1, C2),
-						Cend = C1+C2,
+						Cend is C1+C2,
 						increment(Cend, J, Lbuf1, Lbuf2),
 						copy(Lbuf2, LNpl).
 
 modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf1),
 						elem2(L1, C2),
-						Cend = C1+C2,
+						Cend is C1+C2,
 						increment(Cend, J, Lbuf1, Lbuf2),
 						CP1 is CP-1,
 						modifier(Lbuf2, Ac, J, Qtodo, CP1, Lbuf3),
