@@ -72,18 +72,18 @@ exemple de LDeplacementTODO : [[0,2],[1,1]]
 */
 %% findCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre de coups restants.
 %findCP(-2, [H|[]], H). 
-findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2.
+findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2-1.
 findCP(0, [H|_], CP) :- findCP(H, CP).
 findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
 
 elem1([X|_],X).
 elem2([_|Q], X) :- elem1(Q,X).
-modifier(Lpl, 0, J, [L1|[]], _, LNpl) :- 	elem1(L1,C1),
+modifier(Lpl, 0, J, [L1|[]], CP, LNpl) :- 	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf),
 						elem2(L1, C2),
 						Cend is C1+C2,
-						increment(Cend, J, Lbuf, LNpl).
-						%findCP(Cend, LNpl, CP).
+						increment(Cend, J, Lbuf, LNpl),
+						findCP(Cend, LNpl, CP).
 
 
 modifier(Lpl, _, J, [L1|[]], 1, LNpl) :-	elem1(L1,C1),
