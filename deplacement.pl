@@ -23,7 +23,7 @@ On reçoit :
 	- Le numéro de l'action à réaliser
 */
 
-
+%fonction permettant l'accès à un élément précis de la liste.
 accesElement(1,X,[X|_]).
 accesElement(N,X,[_|Q]) :- accesElement(N1,X,Q), N is N1+1.
 
@@ -51,14 +51,6 @@ increment(C,J,[H|O],[H|N]) :- C1 is C-1, increment(C1,J,O,N).
 
 %Liste de test pour increment/decrement	[[1,2], [3,4], [5,6], [7,8]]
 
-%Placement du pion joué par le joueur J à la colonne C du plateau.
-%[HO|O] représente le plateau avant déplacement du pion joué
-%[Hn|N] représente le plateau après ajout du pion à l'endroit voulu.
-%increment(0,[Ho,Qo],[Hn,Qn]) :- Hn is Ho+1, Qn is Qo.
-%increment(1,[Ho,Qo],[Hn,Qn]) :- Qn is Qo+1, Hn is Ho.
-%increment(0,J,[Vo|O],[Vn|N]) :- increment(J,Vo,Vn), N is O.
-%increment(C,J,[Ho|O],[Hn|N]):- C1 is C-1, increment(C1,J,O,N), Hn is Ho.
-
 
 %modifier(Lplateau, numéro action, numéro joueur, LdéplacementTODO, CP, LNouveauPlateau)
 /* modifier :-	récupérer 1e élément de LdéplacementTODO (=L1),
@@ -73,6 +65,7 @@ exemple de LDeplacementTODO : [[0,2],[1,1]]
 %% findCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre de coups restants.
 %findCP(-2, [H|[]], H). 
 findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2-1.
+%le "-1" est à discuter ici, si le calcul de CP se fait après le mouvement du pion ou pas
 findCP(0, [H|_], CP) :- findCP(H, CP).
 findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
 
