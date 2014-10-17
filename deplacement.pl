@@ -71,7 +71,7 @@ modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
 */
 
 modifier(Lpl, J, [L1|[]], LNpl) :-	elem1(L1,C1),
-						decrement(C1, J, Lpl, Lbuf1),elem2(L1, C2),
+						decrement(C1, J, Lpl, Lbuf1),
 						elem2(L1, C2),
 						Cend is C1+C2,
 						increment(Cend, J, Lbuf1, Lbuf2),
