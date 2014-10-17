@@ -13,12 +13,15 @@ comp_fini([A,B,C,D|L]) :-
 comp_fini([A,B,C,D|L]) :-
 	inverser_termes(L,LA),
 	fini(0,LA).
+
 	
-inverser_termes([],L) :- !.
+	
+inverser_termes([],L) :- 
+	L = [].
 inverser_termes([T|Q],L) :-
 	reverse(T,R),
-	R2 = [L|R],
-	inverser_termes(Q,R2).
+	inverser_termes(Q,P),
+	L = [R|P].
 	
 	
 
