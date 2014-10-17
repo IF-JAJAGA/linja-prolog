@@ -1,35 +1,18 @@
-/*	TOREAD : tests pour modifier :
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,1], [1,2]], 2, LNpl).
-LNpl = [[1, 2], [1, 4], [6, 6], [8, 8]] .
-
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,1], [1,1]], 2, LNpl).
-LNpl = [[1, 2], [1, 4], [7, 6], [7, 8]] .
-
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,2], [1,2], [1,2]], 3, LNpl).
-LNpl = [[1, 2], [0, 4], [5, 6], [10, 8]] .
-
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,2], [1,2], [1,2], [1,2]], 4, LNpl).
-LNpl = [[1, 2], [-1, 4], [5, 6], [11, 8]] .
-
-!!! On ne contrôle pas si les pions passent en négatif.
-!!! Est-ce qu'on fait attention si modifier est appelée avec Ac = 0 et la liste des déplacements plus grande que 1 ?
-
-*/
-
 /*
-On reçoit : 
-	- le numéro du joueur
-	- une liste de coups 
-	- Le numéro de l'action à réaliser % plus nécessaire désormais
+Les différentes fonctions implémentées dans ce fichier :
+	- copy (List1, List2) : copie List1 dans List2
+	- decrement (NumColonne, NumJoueur, OldPlateau, NewPlateau) : Retrait du pion joué par NumJoueur de la NumColonne du Oldplateau.
+			Retourne NewPlateau, correspondant à ces changements
+	- increment (NumColonne, NumJoueur, OldPlateau,NewPlateau) : idem que decrement mais en incrémentant
+	- findCP (NumColonne, Plateau, CP) : Cherche le nombre de pion AVANT de joueur le premier coup
+			Retourne CP, correspondant à ce nombre de pions
+	- modifier (OldPlateau, NumJoueur, ListeDéplacement, NewPlateau) : Fonction principale modifiant le plateau OldPlateau en fonction de la ListeDéplacements et du NumJoueur.
+			Retourne NewPlateau correspondant à la modification de OldPlateau
 */
 
-%fonction permettant l'accès à un élément précis de la liste.
-accesElement(1,X,[X|_]).
-accesElement(N,X,[_|Q]) :- accesElement(N1,X,Q), N is N1+1.
 
 %copy : copie la première liste dans la deuxième.
-%copy([], []).
-copy([H|[]], [H|[]]).
+copy([], []).
 copy([H|Qo],[H|Qn]) :- copy(Qo,Qn).
 
 
@@ -52,25 +35,15 @@ increment(C,J,[H|O],[H|N]) :- C1 is C-1, increment(C1,J,O,N).
 %Liste de test pour increment/decrement	[[1,2], [3,4], [5,6], [7,8]]
 
 
-%modifier(Lplateau, numéro action, numéro joueur, LdéplacementTODO, CP, LNouveauPlateau)
-/* modifier :-	récupérer 1e élément de LdéplacementTODO (=L1),
-				récupérer 1e element de L1 (C1),
-				décrémenter l'endroit d'où on part dans Lplateau (C1) pour le joueur correspondant,
-				récupérer 2e element de L1 (C2),
-				incrémenter l'endroit où on arrive dans Lplateau (C1+C2) pour le joueur correspondant,
-				CP is CP-C2,
-				appel modifier avec nouveau CP et queue de LdéplacementTODO.
-exemple de LDeplacementTODO : [[0,2],[1,1]]
-*/
 %% findCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre de coups restants.
-%findCP(-2, [H|[]], H). 
-findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2-1.
-%le "-1" est à discuter ici, si le calcul de CP se fait après le mouvement du pion ou pas
+findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2. %Calcul du nombre de pions avant le premier coup (sinon rajouter -1)
 findCP(0, [H|_], CP) :- findCP(H, CP).
 findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
 
+
 elem1([X|_],X).
 elem2([_|Q], X) :- elem1(Q,X).
+
 /*
 modifier(Lpl, 0, J, [L1|[]], CP, LNpl) :- 	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf),
@@ -96,6 +69,7 @@ modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
 						modifier(Lbuf2, Ac, J, Qtodo, CP1, Lbuf3),
 						copy(Lbuf3, LNpl).
 */
+
 modifier(Lpl, J, [L1|[]], LNpl) :-	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf1),elem2(L1, C2),
 						elem2(L1, C2),
@@ -110,21 +84,17 @@ modifier(Lpl, J, [L1|Qtodo], LNpl) :-	elem1(L1,C1),
 						increment(Cend, J, Lbuf1, Lbuf2),
 						modifier(Lbuf2, J, Qtodo, Lbuf3),
 						copy(Lbuf3, LNpl).
-/*
-%fin de la deuxième action
-modifier(_,_,_,_,0,X).
+						
+/*	TOREAD : tests pour modifier :
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,1], [1,2]], 2, LNpl).
+LNpl = [[1, 2], [1, 4], [6, 6], [8, 8]] .
 
-%modification de la première action
-modifier(Plateau,NA,NJ,[T|Q],CP,NPlateau):-
-nc==1,
-!,
-accesElement(1,X,T),
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 0, [[1,1], [1,1]], LNpl).
+LNpl = [[1, 2], [1, 4], [7, 6], [7, 8]] .
 
-%calculer nouveau CP pour deuxième action
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 0, [[1,2], [1,2], [1,2]], LNpl).
+LNpl = [[1, 2], [0, 4], [5, 6], [10, 8]] .
 
-%modification de la deuxième action
-modifier(plateau,na,nj,l,cp,nPlateau):-
-nc==2,
-!,
-%décrémenter CP jusqu'à 0 en fonction du nombre de coups
+[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, [[1,2], [1,2], [1,2], [1,2]], LNpl).
+LNpl = [[1, 2], [3, 0], [5, 6], [7, 12]] .
 */
