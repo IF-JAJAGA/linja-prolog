@@ -51,3 +51,31 @@ est_licite(Coups,J,CP) :-
 	sur_plateau(Coups),
 	pion_joueur(J,Coups),
 	calcul_cp(Coups,CP).
+
+% ======================================== TESTS ==========================================
+:- begin_tests(regles).
+
+test(calcul_cp) :-
+	calcul_cp([],0),
+	calcul_cp([[1,1],[1,2]],3),
+	calcul_cp([[2,2]],2).
+
+test(sur_plateau) :-
+	not(sur_plateau([-1,1])),
+	not(sur_plateau([8,1])).
+
+switch_plateaux(Pold,Pnew) :-
+	plateau(Pold),
+	retract(plateau(Pold)),
+	assert(plateau(Pnew)).
+
+test(pion_joueur, [
+										setup(switch_plateaux(Pold,[[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]])),
+										cleanup(switch_plateaux([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]],Pold))
+									]) :-
+	pion_joueur(0,[[0,1],[0,2]]).
+
+test(est_licite) :-
+	est_licite([[0,1]],0,1).
+
+:- end_tests(regles).
