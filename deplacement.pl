@@ -20,7 +20,7 @@ LNpl = [[1, 2], [-1, 4], [5, 6], [11, 8]] .
 On reçoit : 
 	- le numéro du joueur
 	- une liste de coups 
-	- Le numéro de l'action à réaliser
+	- Le numéro de l'action à réaliser % plus nécessaire désormais
 */
 
 %fonction permettant l'accès à un élément précis de la liste.
@@ -28,7 +28,7 @@ accesElement(1,X,[X|_]).
 accesElement(N,X,[_|Q]) :- accesElement(N1,X,Q), N is N1+1.
 
 %copy : copie la première liste dans la deuxième.
-copy([], []).
+%copy([], []).
 copy([H|[]], [H|[]]).
 copy([H|Qo],[H|Qn]) :- copy(Qo,Qn).
 
@@ -71,6 +71,7 @@ findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
 
 elem1([X|_],X).
 elem2([_|Q], X) :- elem1(Q,X).
+/*
 modifier(Lpl, 0, J, [L1|[]], CP, LNpl) :- 	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf),
 						elem2(L1, C2),
@@ -94,7 +95,21 @@ modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
 						CP1 is CP-1,
 						modifier(Lbuf2, Ac, J, Qtodo, CP1, Lbuf3),
 						copy(Lbuf3, LNpl).
+*/
+modifier(Lpl, J, [L1|[]], LNpl) :-	elem1(L1,C1),
+						decrement(C1, J, Lpl, Lbuf1),elem2(L1, C2),
+						elem2(L1, C2),
+						Cend is C1+C2,
+						increment(Cend, J, Lbuf1, Lbuf2),
+						copy(Lbuf2, LNpl).
 
+modifier(Lpl, J, [L1|Qtodo], LNpl) :-	elem1(L1,C1),
+						decrement(C1, J, Lpl, Lbuf1),
+						elem2(L1, C2),
+						Cend is C1+C2,
+						increment(Cend, J, Lbuf1, Lbuf2),
+						modifier(Lbuf2, J, Qtodo, Lbuf3),
+						copy(Lbuf3, LNpl).
 /*
 %fin de la deuxième action
 modifier(_,_,_,_,0,X).
