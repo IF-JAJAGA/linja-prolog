@@ -1,5 +1,8 @@
 %plateau([[12,0],[2,1],[0,0],[2,4],[1,0],[0,6],[3,0],[0,12]]).
 
+print_plateau_tour(Plateau, Tour) :- 	writeln('\n Tour ' + Tour),
+					print_ihm(Plateau).
+
 print_ihm([]).
 print_ihm([T|[]]) :- 
 	print_line(T),!,

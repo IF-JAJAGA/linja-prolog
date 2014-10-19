@@ -38,7 +38,10 @@ increment(C,J,[H|O],[H|N]) :- C1 is C-1, increment(C1,J,O,N).
 %% findCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre de coups restants.
 findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2. %Calcul du nombre de pions avant le premier coup (sinon rajouter -1)
 findCP(0, [H|_], CP) :- findCP(H, CP).
-findCP(C, [_|Q], CP) :- C1 is C-1, findCP(C1, Q, CP).
+findCP(7, [H|_], CP) :- findCP(H, CP).
+findCP(-1, _, 0).
+findCP(8, _, 0).
+findCP(C, [_|Q], CP) :- C > 0, C < 7, C1 is C-1, findCP(C1, Q, CP).
 
 
 elem1([X|_],X).

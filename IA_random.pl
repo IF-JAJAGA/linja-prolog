@@ -8,23 +8,40 @@
 
 pionsJ(0, [X|_], X).
 pionsJ(1,[_|Q], X) :- pionsJ(0, Q, X).
-%coupsPossibles renvoie la listes des colonnes qui contiennent au moins un pion du joueur J.
+%coupsPossibles renvoie la listes des colonnes qui contiennent au moins un pion du joueur J qui est possible à déplacer.
 coupsPossibles(J, [H|LPlQ], L) :- coupsPossibles(J, [H|LPlQ], L, 0).	%Initialisation
-coupsPossibles(J, [H|[]], [N|[]], NCol) :-	pionsJ(J, H, P),	%Nb de pions
-					P>0,
-					N is NCol.
-coupsPossibles(J, [H|[]], [], _) :-	pionsJ(J, H, P),	%Nb de pions
-					P=0.
 
-coupsPossibles(J, [H|LPlQ], [N|L], NCol) :-	pionsJ(J, H, P),	%Nb de pions
-					P>0,
-					N is NCol,
-					NCol1 is NCol+1,
-					coupsPossibles(J, LPlQ, L, NCol1).
-coupsPossibles(J, [H|LPlQ], L, NCol) :-	pionsJ(J, H, P),	%Nb de pions
-					P=0,
-					NCol1 is NCol+1,
-					coupsPossibles(J, LPlQ, L, NCol1).
+coupsPossibles(_, [], [], _).
+%Joueur 0 : coup impossible en colonne 0
+coupsPossibles(J, [H|[]], [], NCol) :-	J == 0,
+						pionsJ(J, H, P),	%P Nb de pions pour J
+						P>0,
+						NCol == 7.
+
+coupsPossibles(J, [H|LPlQ], [NCol|LTodo], NCol) :-	J == 0,
+						pionsJ(J, H, P),	%P Nb de pions pour J
+						P>0,
+						NCol \== 7,
+						NCol1 is NCol+1,
+						coupsPossibles(J, LPlQ, LTodo, NCol1).
+%Joueur 1 : coup impossible en colonne 7
+coupsPossibles(J, [H|LPlQ], LTodo, NCol) :-	J == 1,
+						pionsJ(J, H, P),	%P Nb de pions pour J
+						P>0,
+						NCol == 0,
+						NCol1 is NCol+1,
+						coupsPossibles(J, LPlQ, LTodo, NCol1).
+coupsPossibles(J, [H|LPlQ], [NCol|LTodo], NCol) :-	J == 1,
+						pionsJ(J, H, P),	%P Nb de pions pour J
+						P>0,
+						NCol \== 0,
+						NCol1 is NCol+1,
+						coupsPossibles(J, LPlQ, LTodo, NCol1).
+%Pour les cas où J n'a pas de pion dans la colonne NCol.
+coupsPossibles(J, [H|LPlQ], LTodo, NCol) :-		pionsJ(J, H, P),	%Nb de pions
+						P=0,
+						NCol1 is NCol+1,
+						coupsPossibles(J, LPlQ, LTodo, NCol1).
 %Agit sur la longueur du déplacement pour ne pas dépasser la longueur du plateau.
 %Si Lenght est à 0, on parle du joueur 1 dont les pions s'arrêtent à la colonne 0.
 pasDepasserPlateau(0, C, L1, L) :- 	Exedent is C-L1,
@@ -41,27 +58,40 @@ pasDepasserPlateau(Lenght, C, L1, L) :- Lenght \==0,
 					C+L1 < Lenght,
 					L is L1.
 
-%premierCoupIA_random doit renvoyer une liste TODO
+%premierCoupIA_random doit renvoyer une liste TODO et CP (nombre de mouvements supplémentaires)
+%Aucun mouvement possible pour J.
+premierCoupIA_random(LPl, J, [], 0) :-			coupsPossibles(J, LPl, LCols),
+							length(LCols, Lenght),
+							Lenght == 0.
+
+
 premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 0,
 							coupsPossibles(J, LPl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
-							findCP(C+1, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
+							Carrivee is C+1,
+							findCP(Carrivee, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is 1.
 premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
 							coupsPossibles(J, LPl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
-							findCP(C-1, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
-							L is 1.
-
-
+							Carrivee is C-1,
+							findCP(Carrivee, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
+							L is -1.
 
 
 supplementaireCoupIA_random(_, _, [], 0).
-supplementaireCoupIA_random(Lpl, 0, [[C,L]|Q],CP) :- 	coupsPossibles(J, Lpl, LCols),
+%Aucun mouvement possible pour J.
+supplementaireCoupIA_random(LPl, J, [], _) :-		coupsPossibles(J, LPl, LCols),
+							length(LCols, Lenght),
+							Lenght == 0.
+
+
+supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 0,
+							coupsPossibles(J, Lpl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
@@ -71,7 +101,8 @@ supplementaireCoupIA_random(Lpl, 0, [[C,L]|Q],CP) :- 	coupsPossibles(J, Lpl, LCo
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
 
-supplementaireCoupIA_random(Lpl, 1, [[C,L]|Q],CP) :- 	coupsPossibles(J, Lpl, LCols),
+supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
+							coupsPossibles(1, Lpl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
@@ -81,7 +112,3 @@ supplementaireCoupIA_random(Lpl, 1, [[C,L]|Q],CP) :- 	coupsPossibles(J, Lpl, LCo
 							L is -L2,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
-
-/*tour constitue un tour pour le joueur, c'est à dire l'appel à premierCoup puis à supplementaireCoup avec les modifs qui vont avec.
-*/
-tour().
