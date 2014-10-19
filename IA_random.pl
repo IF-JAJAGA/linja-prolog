@@ -42,12 +42,21 @@ pasDepasserPlateau(Lenght, C, L1, L) :- Lenght \==0,
 					L is L1.
 
 %premierCoupIA_random doit renvoyer une liste TODO
-premierCoupIA_random(LPl, J, [C,L|[]], CP) :- 	coupsPossibles(J, LPl, LCols),
-					length(LCols, Lenght),
-					Col is random(Lenght),	%On trouve le pion
-					nth_element(Col,C,LCols),
-					findCP(C+1, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
-					L is 1.
+premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 0,
+							coupsPossibles(J, LPl, LCols),
+							length(LCols, Lenght),
+							Col is random(Lenght),	%On trouve le pion
+							nth_element(Col,C,LCols),
+							findCP(C+1, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
+							L is 1.
+premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
+							coupsPossibles(J, LPl, LCols),
+							length(LCols, Lenght),
+							Col is random(Lenght),	%On trouve le pion
+							nth_element(Col,C,LCols),
+							findCP(C-1, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
+							L is 1.
+
 
 
 
@@ -57,7 +66,7 @@ supplementaireCoupIA_random(Lpl, 0, [[C,L]|Q],CP) :- 	coupsPossibles(J, Lpl, LCo
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
 							random_between(1,CP,L1),
-							pasDepasserPlateau(6, C, L1, L),
+							pasDepasserPlateau(7, C, L1, L),
 							NCP is CP - L,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).

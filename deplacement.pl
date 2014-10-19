@@ -69,7 +69,7 @@ modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
 						modifier(Lbuf2, Ac, J, Qtodo, CP1, Lbuf3),
 						copy(Lbuf3, LNpl).
 */
-
+modifier(L,_,[],L).
 modifier(Lpl, J, [L1|[]], LNpl) :-	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf1),
 						elem2(L1, C2),
