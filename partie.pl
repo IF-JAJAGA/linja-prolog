@@ -17,24 +17,25 @@ Lance une partie en gérant :
 plat([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]]).
 
 tour(_,0).
-tour(J, N) :- 	N \== 0,
+tour(N) :- 	N \== 0,
 		plat(P),
-
-		%%Jeu du joueur 0
-		coupIA_random(P,J,LTodo),
-		print(LTodo),
-		modifier(P,J,LTodo,Pbuf),
-		
-		write('\nPlateau après un coup du joueur 0.'),
-		print_plateau_tour(Pbuf, N),
-		%sleep(3),
+		J1 is 0,
+		J2 is 1,
 
 		%%Jeu du joueur 1
-		%coupIA_...(Pbuf,J,LTodo)
-		%modifier(Pbuf,J,LTodo,Pbuf2).
+		coupIA_random(P,J1,LTodo1),
+		print(LTodo1),
+		modifier(P,J1,LTodo1,Pbuf1),
+		
+		write('\nPlateau après un coup du joueur 1.'),
+		print_plateau_tour(Pbuf1, N),
+		%sleep(3),
 
-		retract(plat(P)), assert(plat(Pbuf)),
+		%%Jeu du joueur 2
+		coupIA_random(Pbuf1,J2,LTodo2),
+		modifier(Pbuf1,J2,LTodo2,Pbuf2),
+
+		retract(plat(P)), assert(plat(Pbuf2)),
 		N1 is N-1,
-		JNext is -(J-1),
 		!,	%On ne peut pas modifier les tours une fois qu'ils sont joués
-		tour(JNext, N1).
+		tour(N1).
