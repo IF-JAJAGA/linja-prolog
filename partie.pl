@@ -19,16 +19,21 @@ plat([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]]).
 tour(_,0).
 tour(J, N) :- 	N \== 0,
 		plat(P),
-		%print(P),
-		premierCoupIA_random(P, J, LTodo1, CP), modifier(P, J, LTodo1, Pbuf1),
-		write('\nPlateau après le premier coup.'),
-		print_plateau_tour(Pbuf1, N),
-		%sleep(1),
-		supplementaireCoupIA_random(Pbuf1, J, LTodo2, CP), modifier(Pbuf1, J, LTodo2, Pbuf2),
-		write('\nPlateau après les coups supplémentaires.'),
-		print_plateau_tour(Pbuf2, N),
+
+		%%Jeu du joueur 0
+		coupIA_random(P,J,LTodo),
+		print(LTodo),
+		modifier(P,J,LTodo,Pbuf),
+		
+		write('\nPlateau après un coup du joueur 0.'),
+		print_plateau_tour(Pbuf, N),
 		%sleep(3),
-		retract(plat(P)), assert(plat(Pbuf2)),
+
+		%%Jeu du joueur 1
+		%coupIA_...(Pbuf,J,LTodo)
+		%modifier(Pbuf,J,LTodo,Pbuf2).
+
+		retract(plat(P)), assert(plat(Pbuf)),
 		N1 is N-1,
 		JNext is -(J-1),
 		!,	%On ne peut pas modifier les tours une fois qu'ils sont joués
