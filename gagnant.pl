@@ -1,4 +1,4 @@
-plateau([[12,0],[2,1],[0,0],[2,4],[1,0],[0,6],[3,0],[0,12]]).
+%plateau([[12,0],[2,1],[0,0],[2,4],[1,0],[0,6],[3,0],[0,12]]).
 plateau2([[0,12],[0,1],[0,5],[0,0],[1,0],[0,6],[3,0],[0,12]]).
 plateau3([[0,12],[4,1],[0,5],[3,0],[0,0],[7,0],[26,0],[4,0]]).
 plateau4([[0,12],[4,1],[0,5],[3,0],[0,0],[7,0],[26,0],[4,2]]).
@@ -6,14 +6,23 @@ plateau5([[0,12],[4,1],[0,5],[3,0],[0,0],[7,0],[26,6],[4,0]]).
 plateau6([[0,12],[4,1],[0,5],[3,0],[0,0],[7,8],[26,0],[4,0]]).
 test1([[1,2],[3,4],[5, 6],[1,1]]).
 
-comp_fini([]).
-comp_fini([A,B,C,D|L]) :-
-	LI = [A,B,C,D],
-	fini(0,LI).
-comp_fini([A,B,C,D|L]) :-
+comp_fini([],_,_,_).
+comp_fini([A,B,C,D|L],P0,P1,G) :-
+	L0 = [A,B,C,D],
 	inverser_termes(L,LA),
-	fini(0,LA).
+	reverse(LA,L1),
+	fini(0,L0),
+	trouver_gagnant(L0,L1,P0,P1,G).
 
+trouver_gagnant([],[],_,_,_).
+trouver_gagnant(L0,L1,P0,P1,G) :-
+	compter_points(L0,5,P0),
+	compter_points(L1,5,P1),
+	P0 > P1 ->
+		G is 0;
+	P1 > P0 ->
+		G is 1;
+	G is 2.
 	
 	
 inverser_termes([],L) :- 
@@ -25,7 +34,8 @@ inverser_termes([T|Q],L) :-
 	
 	
 
-fini(0,[]).
+fini(0,[]) :-
+	print('FINI, EO').
 fini(0,[T|Q]) :- 
 	T = [TT|TQ],
 	fini(TT,Q).

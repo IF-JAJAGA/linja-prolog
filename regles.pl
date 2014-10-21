@@ -5,9 +5,9 @@ plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 % Prouve que l'element d'indice N a pour valeur Val dans List.
 nth_element(0,Val,[Val|_]).
 nth_element(N,Val,List) :-
-	List = [_|Tail],
-	nth_element(N1,Val,Tail),
-	N is N1+1.
+	List = [_|Q],
+	N1 is N-1,
+	nth_element(N1,Val,Q).
 
 % Prouve que la liste de coups consomme CP points de mouvement.
 calcul_cp(Coups,CP) :-
@@ -40,11 +40,12 @@ joueur_existe(1).
 pion_joueur(_,[]).
 pion_joueur(J,Coups) :-
 	joueur_existe(J),
-	plateau(P),
 	Coups = [T|Q],
+	plateau(P),
 	nth_element(0,Depart,T),
 	nth_element(Depart,Case,P),
 	nth_element(J,Npions,Case),
+	!,
 	Npions > 0,
 	pion_joueur(J,Q),!.
 
