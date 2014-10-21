@@ -1,5 +1,7 @@
 %Fichiers à charger
 %consult(['IA_random.pl', 'regles.pl', 'deplacement.pl', 'partie.pl', 'ihm.pl']).
+:- include('IA_random.pl').
+:- include('ihm.pl').
 
 /*Lancement d'une partie à 20 itérations commencant avec le joueur 0:
 	tour(0,20).

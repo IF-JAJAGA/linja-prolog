@@ -1,3 +1,5 @@
+:- include('regles.pl').
+
 /*
 	###	IA Random	###
 	- premier coup : random sur les pions que l'on peut déplacer (= random sur la colonne)

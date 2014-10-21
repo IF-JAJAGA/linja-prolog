@@ -80,7 +80,7 @@ est_licite(Coups,J) :-
 	nombre_pions(P,Arrivee,CP),
 	increment(Arrivee,J,P,NewP),
 	est_licite(NewP,Q, J, CP),
-	decrement(Arrivee,J,NewP,P),!.
+	decrement(Arrivee,J,NewP,P).
 
 % ======================================== TESTS ==========================================
 :- begin_tests(regles).
