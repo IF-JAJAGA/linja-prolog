@@ -37,40 +37,37 @@ joueur_existe(0).
 joueur_existe(1).
 
 % Prouve que le Joueur J a au moins un pion disponible pour chaque coup.
-pion_joueur(_,[]).
-pion_joueur(J,Coups) :-
+pion_joueur(_,_,[]).
+pion_joueur(P,J,Coups) :-
 	joueur_existe(J),
 	Coups = [T|Q],
-	plateau(P),
 	nth_element(0,Depart,T),
 	nth_element(Depart,Case,P),
 	nth_element(J,Npions,Case),
-	!,
 	Npions > 0,
-	pion_joueur(J,Q),!.
+	pion_joueur(P,J,Q),!.
 
 % Prouve que la case Ncase a Npions
-nombre_pions(Ncase,Npions) :-
-	plateau(P),
+nombre_pions(P,Ncase,Npions) :-
 	nth_element(Ncase,Case,P),
 	nth_element(0,P0,Case),
 	nth_element(1,P1,Case),
-	Npions = P0 + P1.
+	Npions is P0 + P1.
 
 % Prouve que la case est pleine, toujours faux si l'on est dans les extrémités du plateau
-case_pleine(Ncase) :-
+case_pleine(P,Ncase) :-
 	Ncase > 0,
 	Ncase < 7,
-	nombre_pions(Ncase,Npions),
+	nombre_pions(P,Ncase,Npions),
 	Npions >= 6.
 
 % Prouve que les coups sont possibles pour le joueur J en CP mouvements.
-est_licite([], _, 0).
-est_licite(Coups,J,CP) :-
+est_licite(_,[], _, 0).
+est_licite(P,Coups,J,CP) :-
 	Coups = [T|Q],
 	T = [TCoup|QCoup],
 	sur_plateau(Coups),
-	pion_joueur(J,Coups),
+	pion_joueur(P,J,Coups),
 	calcul_cp(Coups,CP).
 
 est_licite(Coups,J) :-
@@ -79,11 +76,11 @@ est_licite(Coups,J) :-
 	nth_element(0,Depart,T),
 	nth_element(1,PM,T),
 	Arrivee is Depart + PM,
-	not(case_pleine(Arrivee)),
-	nombre_pions(Arrivee,CP),
-	increment(Arrivee,J,P),
-	est_licite(Q, J, CP),
-	decrement(Arrivee,J,P).
+	not(case_pleine(P,Arrivee)),
+	nombre_pions(P,Arrivee,CP),
+	increment(Arrivee,J,P,NewP),
+	est_licite(NewP,Q, J, CP),
+	decrement(Arrivee,J,NewP,P),!.
 
 % ======================================== TESTS ==========================================
 :- begin_tests(regles).
