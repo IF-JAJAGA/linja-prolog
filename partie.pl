@@ -30,12 +30,29 @@ tour(N) :- 	N \== 0,
 		write('\nPlateau après un coup du joueur 1.'),
 		print_plateau_tour(Pbuf1, N),
 		%sleep(3),
+		
+		!,
+
+		not(comp_fini(Pbuf1, P0, P1, G)),
+		
+
+		!,
 
 		%%Jeu du joueur 2
 		coupIA_random(Pbuf1,J2,LTodo2),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 
+		write('\nPlateau après un coup du joueur 2.'),
+		print_plateau_tour(Pbuf2, N),
+		%sleep(3),
+		
+		!,
+
+		not(comp_fini(Pbuf1, P0, P1, G)),
+
+		!,
+
 		retract(plat(P)), assert(plat(Pbuf2)),
 		N1 is N-1,
-		!,	%On ne peut pas modifier les tours une fois qu'ils sont joués
+		
 		tour(N1).
