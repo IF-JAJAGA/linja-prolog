@@ -1,0 +1,17 @@
+1er coup : max de capital point
+	- si égalité , Q = plus proche de notre base.
+
+fonction coups supplémentaire
+	si on peut
+		final avec tout le cp.
+	else
+		On choisit le pion le plus proche de la base d'arrivée et on
+		calcule son CPNecessaire :
+		Si CPNecessaire < CP alors
+			On stocke le déplacement la liste TODO.
+			Rappel de fonction coups supplémentaire avec le nouveau
+			CP : CPN = CP - CPNecessaire.
+		else
+			On stocke le deplacement dans la liste TODO.
+		fin si
+	fin si
