@@ -2,15 +2,21 @@
 
 /*
 	###	IA Random	###
-	- premier coup : random sur les pions que l'on peut déplacer (= random sur la colonne)
-	- coup supplémentaire : random sur la colonne puis sur la longueur de déplacement avec la fonction findCP
-
-	Les deux fonctions appellent modifier à chaque fois.
+	- premier coup (fonction premierCoupIA_random): random sur les pions que l'on peut déplacer (= random sur la colonne)
+	- coup supplémentaire (fonction supplementaireCoupIA_random): random sur la colonne puis sur la longueur de déplacement avec la fonction findCP
+	
+	Entre les deux fonctions, on modifie le plateau dans un plateau buffer pour le passer à supplementaireCoupIA_random.
 */
 
+/*
+ *Pour une colonne, pionsJ permet de trouver le nombre de pions pour le joueur J.
+ */
 pionsJ(0, [X|_], X).
 pionsJ(1,[_|Q], X) :- pionsJ(0, Q, X).
-%coupsPossibles renvoie la listes des colonnes qui contiennent au moins un pion du joueur J qui est possible à déplacer.
+
+/*
+ * coupsPossibles renvoie la listes des colonnes qui contiennent au moins un pion du joueur J  possible à déplacer.
+ */
 coupsPossibles(J, [H|LPlQ], L) :- coupsPossibles(J, [H|LPlQ], L, 0).	%Initialisation
 
 coupsPossibles(_, [], [], _).
@@ -40,12 +46,14 @@ coupsPossibles(J, [H|LPlQ], [NCol|LTodo], NCol) :-	J == 1,
 						NCol1 is NCol+1,
 						coupsPossibles(J, LPlQ, LTodo, NCol1).
 %Pour les cas où J n'a pas de pion dans la colonne NCol.
-coupsPossibles(J, [H|LPlQ], LTodo, NCol) :-		pionsJ(J, H, P),	%Nb de pions
+coupsPossibles(J, [H|LPlQ], LTodo, NCol) :-	pionsJ(J, H, P),	%Nb de pions
 						P=0,
 						NCol1 is NCol+1,
 						coupsPossibles(J, LPlQ, LTodo, NCol1).
-%Agit sur la longueur du déplacement pour ne pas dépasser la longueur du plateau.
-%Si Lenght est à 0, on parle du joueur 1 dont les pions s'arrêtent à la colonne 0.
+/*
+ * Agit sur la longueur du déplacement pour ne pas dépasser la longueur du plateau.
+ * Si Lenght est à 0, on parle du joueur 1 dont les pions s'arrêtent à la colonne 0.
+ * */
 pasDepasserPlateau(0, C, L1, L) :- 	Exedent is C-L1,
 					Exedent < 0,
 					L is L1+Exedent.
@@ -59,9 +67,10 @@ pasDepasserPlateau(Lenght, C, L1, L) :- Lenght \==0,
 pasDepasserPlateau(Lenght, C, L1, L) :- Lenght \==0,
 					C+L1 < Lenght,
 					L is L1.
-
-%premierCoupIA_random doit renvoyer une liste TODO et CP (nombre de mouvements supplémentaires)
-%Aucun mouvement possible pour J.
+/*
+ * premierCoupIA_random doit renvoyer une liste TODO et CP (nombre de mouvements supplémentaires)
+ * Aucun mouvement possible pour J.
+ * */
 premierCoupIA_random(LPl, J, [], 0) :-			coupsPossibles(J, LPl, LCols),
 							length(LCols, Lenght),
 							Lenght == 0.
@@ -114,3 +123,14 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
 							L is -L2,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
+
+%Concaténation de deux listes dans une troisieme.
+concat([], [], []).	%Condition d'arrêt où la seconde liste est vide.
+concat([],[X|[]],[X|[]]).
+concat([],[X|L2],[X|L3]) :- concat([],L2,L3).
+concat([X|L1] , L2, [X|L3]) :- concat(L1,L2,L3).
+
+coupIA_random(P,J, LTodo) :- 	premierCoupIA_random(P, J, LTodo1, CP),
+				modifier(P, J, LTodo1, Pbuf),
+				supplementaireCoupIA_random(Pbuf, J, LTodo2, CP),
+				concat(LTodo1, LTodo2, LTodo).

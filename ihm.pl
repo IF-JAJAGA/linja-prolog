@@ -38,18 +38,31 @@ initialise :-
 create_GUI_components :-
 	new(@p, picture('Test 1')),
 	send(@p,open),
-	send(@p, display, new(@b, circle(25)),point(25,25)),
-	send(@p, display, new(@r, circle(25)), point(25,75)),
-	send(@p, display, new(@l, line(0,0,25,25,none))),
-	send(@p, display, new(, point(5,6))),
+	send(@p, display, new(@b, circle(25)),point(12.5,25)),
+	send(@p, display, new(@r, circle(25)), point(12.5,75)),
+	send(@p, display, new(@l1, line(50,0,50,1000,none))),
+	send(@p, display, new(@l2, line(100,0,100,1000,none))),
+	send(@p, display, new(@l3, line(150,0,150,1000,none))),
+	send(@p, display, new(@l4, line(200,0,200,1000,none))),
+	send(@p, display, new(@l5, line(250,0,250,1000,none))),
+	send(@p, display, new(@l6, line(300,0,300,1000,none))),
+	send(@p, display, new(@l7, line(350,0,350,1000,none))),
 	send(@r, fill_pattern, colour(red)),
 	send(@b, fill_pattern, colour(black)).
 
 free_GUI_components :-
 	free(@b),
 	free(@r),
-	free(@l).
+	free(@l),
+	free(@p),
+	free(@l1),
+	free(@l2),
+	free(@l3),
+	free(@l4),
+	free(@l5),
+	free(@l6),
+	free(@l7).
 
-test :-
-	send(M, x,7).
+%test :-
+	%send(M, x,7).
 	
