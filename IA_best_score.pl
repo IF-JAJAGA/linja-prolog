@@ -2,8 +2,13 @@
 %fonction genererliste
 %fonction trouvermax
 
+%fonction banale pour générer un plateau de ce type
 test(P) :- P = [[3,0],[0,1],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
 
+/*
+Ensemble des fonctions annulerCP qui va annuler le CP dans la liste renvoyée par genererliste dans les cas où aucun pion n'arrive à ce point
+ou si la colonne est totalement pleine (6 pions dans la colonne)
+*/
 annulerCP(_,_,_,[],[]).
 annulerCP(_,6,0). % annule le CP si le CP calculé est de 6
 annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente.
@@ -14,6 +19,13 @@ annulerCP(_,[T2|_],1,[T|Q],[L2|Q]) :-
 	T2=[_,PJ2],
 	annulerCP(PJ2,T,L2).
 
+/*
+Fonction qui génère une liste de CP correspondant aux colonnes du plateau
+Chaque CP est calculé et ajusté en fonction que la colonne est déjà pleine ou si, en fonction du joueur, aucun pion ne peut arriver sur cette case.
+Elle prend en paramètre la liste de liste qui compose le plateau,
+le numéro du joueur J,
+et renvoie la liste L de CPs
+*/
 genererliste([],_,[]).
 genererliste(Plateau, J, L) :-
 	Plateau = [T|Q],
