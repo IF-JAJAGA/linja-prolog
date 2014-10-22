@@ -16,11 +16,13 @@ Lance une partie en gérant :
 */
 
 :-dynamic(plat/1).
+:-dynamic(tourNumero/1).
 plat([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]]).
+tourNumero(0).
 
 tour(_,0).
-tour(N) :- 	N \== 0,
-		plat(P),
+tour() :- 	plat(P),
+		tourNumero(N),
 		J1 is 0,
 		J2 is 1,
 
@@ -55,6 +57,7 @@ tour(N) :- 	N \== 0,
 		!,
 
 		retract(plat(P)), assert(plat(Pbuf2)),
-		N1 is N-1,
+		N1 is N+1,
+		retract(tourNumero(N)), assert(tourNumero(N1)),
 		
-		tour(N1).
+		tour().

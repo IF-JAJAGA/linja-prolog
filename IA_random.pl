@@ -93,6 +93,9 @@ premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
 							findCP(Carrivee, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is -1.
 
+random_entre(Min,Max,R)	:-	XBuf is random(Max),
+				R is XBuf+Min.
+
 
 supplementaireCoupIA_random(_, _, [], 0).
 %Aucun mouvement possible pour J.
@@ -106,7 +109,7 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 0,
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
-							random_between(1,CP,L1),
+							random_entre(1,CP,L1),
 							pasDepasserPlateau(7, C, L1, L),
 							NCP is CP - L,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
@@ -117,7 +120,7 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
-							random_between(1,CP,L1),
+							random_entre(1,CP,L1),
 							pasDepasserPlateau(0, C, L1, L2),
 							NCP is CP - L2,
 							L is -L2,
