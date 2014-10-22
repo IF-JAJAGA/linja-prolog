@@ -2,6 +2,9 @@
 plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 :- include('deplacement.pl').
 
+% TODO: autoriser deplacement vers la derniere case avec trop de CP
+
+
 % Prouve que l'element d'indice N a pour valeur Val dans List.
 nth_element(0,Val,[Val|_]).
 nth_element(N,Val,List) :-
@@ -70,9 +73,8 @@ est_licite(P,Coups,J,CP) :-
 	pion_joueur(P,J,Coups),
 	calcul_cp(Coups,CP).
 
-est_licite(Coups,J) :-
+est_licite(P,Coups,J) :-
 	Coups = [T|Q],
-	plateau(P),
 	nth_element(0,Depart,T),
 	nth_element(1,PM,T),
 	Arrivee is Depart + PM,
