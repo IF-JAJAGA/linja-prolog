@@ -38,7 +38,9 @@ genererliste(Plateau, J, L) :-
 	
 plateau([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]]).
 
-/*Cette fonction genere une liste avec le nombre de coups possibles si on se déplace a chaque colonne du plateau dans le premier coup.
+/*	ALBERTO............................................
+	
+Cette fonction genere une liste avec le nombre de coups possibles si on se déplace a chaque colonne du plateau dans le premier coup.
  Dans les colonnes où il y a déjà 6 jetons on met un 0 car on ne va pas se déplacer vers elles. On met un 0 aussi pour la colonne de départ du joueur car il ne peut pas bouger là bas.
  Dans la colonne de fin (la plus eloignée pour le joueur on met un 1 car les régles marquent que c'est le nombre de coups aditionnels qu'on reçoit si on y tombe.'
  L'ordre des élements de cette liste et le même que celle du plateau.
@@ -57,7 +59,7 @@ genererliste2(L,R) :-
 
 /*aux*/
 
-genererlisteaux([],R).
+genererlisteaux([],_).
 genererlisteaux([T|[]],R) :-
 	R = [1].
 genererlisteaux([T|Q],R) :-
@@ -65,12 +67,37 @@ genererlisteaux([T|Q],R) :-
 	S1 is TT + TQ,
 	( S1 == 6 ->
 		S is 0;
-		S is S1
-	),
+		S is S1),
 	genererlisteaux(Q,R1),
 	append([S],R1,R).
 	
 
 
 
-%fonctiontrouvermax
+/*Dit la case a bouger.
+Il faut appeller avec N=0*/
+
+trouvermax([],CP,I,_) :-
+	CP = -1,
+	IP = -1.
+trouvermax([T|Q],CP,I,N) :-
+	N1 is N +1,
+	trouvermax(Q,CP1,I1,N1),
+	(T >= CP1 ->
+		CP = T,
+		I = N;
+		CP = CP1,
+		I = I1).
+
+/*refactoriser*/
+trouvermax2([],CP,I,_) :-
+	CP = -1,
+	IP = -1.
+trouvermax2([T|Q],CP,I,N) :-
+	N1 is N +1,
+	trouvermax2(Q,CP1,I1,N1),
+	(T > CP1 ->
+		CP = T,
+		I = N;
+		CP = CP1,
+		I = I1).
