@@ -14,14 +14,8 @@ plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 %	nth_element(N1,Val,Q).
 
 % Prouve que la liste de coups consomme CP points de mouvement.
-calcul_cp(Coups,CP) :-
-	Coups = [],
-	CP = 0.
-calcul_cp(Coups,CP) :-
-	Coups = [T|Q],
-	T = [_,X],
-	calcul_cp(Q,CP1),
-	CP is CP1 + X.
+calcul_cp(Deplacement,CP,CP1) :-
+	CP1 is CP - Deplacement.
 
 % Prouve que tous les coups de la liste sont dans les limites du plateau.
 sur_plateau([]).
@@ -65,17 +59,23 @@ case_pleine(P,Ncase) :-
 	Npions >= 6.
 
 % Prouve que les coups sont possibles pour le joueur J en CP mouvements.
-est_licite(_,[],_,_).
-est_licite(P,Coups,J,CP) :-
+intern_est_licite(_,[],_,CP) :-
+	CP == 0.
+intern_est_licite(P,Coups,J,CP) :-
 	Coups = [T|Q],
 	T = [Depart,Deplacement],
 	Arrivee is Depart + Deplacement,
 	not(case_pleine(P,Arrivee)),
 	sur_plateau(Coups),
 	pion_joueur(P,J,Coups),
-	CP1 is CP * (1-2*J),
-	calcul_cp(Coups,CP1),
-	est_licite(P,Q,J,CP).
+	PM is Deplacement * (1-2*J),
+	calcul_cp(PM,CP,CP2),
+	intern_est_licite(P,Q,J,CP2).
+
+est_licite(_,[],_,_).
+
+est_licite(P,Coups,J,CP) :-
+	intern_est_licite(P,Coups,J,CP).
 
 est_licite(P,Coups,J) :-
 	Coups = [T|Q],
