@@ -101,3 +101,20 @@ trouvermax2([T|Q],CP,I,N) :-
 		I = N;
 		CP = CP1,
 		I = I1).
+
+/*	----- Jérôme -----
+ * */
+
+%genererlisteCP(Plateau, Joueur, ListeSortante).
+genererlisteCP(P, J, L) :- genererlisteCP(P, J, L, 0).
+
+genererlisteCP(P, J, [CP|[]], C):-	C == 7,
+					trouverCP(C, J, P, CP).
+
+genererlisteCP(P, J, [CP|Q], C)	:- 	C \==7,
+					trouverCP(C, J, P, CP),
+					C1 is C+1,
+					genererlisteCP(P, J, Q, C1).
+
+%Un seul coup qui amène un pion au bout avec tout le CP.
+%IA_best_supplementaire(P, J, [C,L|[]], CP) :-

@@ -52,15 +52,15 @@ increment(C,J) :-
 %trouverCP(Colonne, Joueur, Plateau, CP).
 trouverCP(0, 0, _, 0).
 trouverCP(0, 1, _, 1).
-trouverCP(8, 1, _, 0).
-trouverCP(8, 0, _, 1).
-trouverCP(C, _, P, CP) :- 	C \== 0, C\==8,
+trouverCP(7, 1, _, 0).
+trouverCP(7, 0, _, 1).
+trouverCP(C, _, P, CP) :- 	C \== 0, C\==7,
 			findCP(C,P,CP).
 findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2. %Calcul du nombre de pions avant le premier coup (sinon rajouter -1)
 findCP(0, [H|_], CP) :- findCP(H, CP).
 findCP(7, [H|_], CP) :- findCP(H, CP).
 %findCP(-1, _, 0).
-findCP(8, _, 1).
+%findCP(7, _, 1).
 findCP(C, [_|Q], CP) :- C > 0, C < 7, C1 is C-1, findCP(C1, Q, CP).
 
 
