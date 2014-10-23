@@ -7,11 +7,11 @@ plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 
 % Prouve que l'element d'indice N a pour valeur Val dans List.
 % DEPRECATED !!!! Utiliser le prédicat prédéfini nth0
-nth_element(0,Val,[Val|_]).
-nth_element(N,Val,List) :-
-	List = [_|Q],
-	N1 is N-1,
-	nth_element(N1,Val,Q).
+%nth_element(0,Val,[Val|_]).
+%nth_element(N,Val,List) :-
+%	List = [_|Q],
+%	N1 is N-1,
+%	nth_element(N1,Val,Q).
 
 % Prouve que la liste de coups consomme CP points de mouvement.
 calcul_cp(Coups,CP) :-
@@ -19,7 +19,7 @@ calcul_cp(Coups,CP) :-
 	CP = 0.
 calcul_cp(Coups,CP) :-
 	Coups = [T|Q],
-	nth_element(1,X,T),
+	T = [_,X],
 	calcul_cp(Q,CP1),
 	CP is CP1 + X.
 
@@ -27,8 +27,7 @@ calcul_cp(Coups,CP) :-
 sur_plateau([]).
 sur_plateau(Coups) :-
 	Coups = [T|Q],
-	nth_element(0,Depart,T),
-	nth_element(1,PM,T),
+	T = [Depart,PM],
 	% PM peut être positif ou négatif selon le joueur
 	Depart >= 0,
 	Depart =< 7,
@@ -45,17 +44,17 @@ pion_joueur(_,_,[]).
 pion_joueur(P,J,Coups) :-
 	joueur_existe(J),
 	Coups = [T|Q],
-	nth_element(0,Depart,T),
-	nth_element(Depart,Case,P),
-	nth_element(J,Npions,Case),
+	T = [Depart,_],
+	nth0(Depart,P,Case),
+	nth0(J,Case,Npions),
 	Npions > 0,
 	pion_joueur(P,J,Q),!.
 
 % Prouve que la case Ncase a Npions
 nombre_pions(P,Ncase,Npions) :-
-	nth_element(Ncase,Case,P),
-	nth_element(0,P0,Case),
-	nth_element(1,P1,Case),
+	nth0(Ncase,P,Case),
+	nth0(0,Case,P0),
+	nth0(1,Case,P1),
 	Npions is P0 + P1.
 
 % Prouve que la case est pleine, toujours faux si l'on est dans les extrémités du plateau

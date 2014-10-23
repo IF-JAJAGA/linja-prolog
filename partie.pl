@@ -1,5 +1,4 @@
 %Fichiers à charger
-%consult(['IA_random.pl', 'regles.pl', 'deplacement.pl', 'partie.pl', 'ihm.pl']).
 :- include('IA_random.pl').
 :- include('ihm.pl').
 :- include('gagnant.pl').
@@ -49,8 +48,8 @@ tour() :- 	plat(P),
 		modifier(P,J1,LTodo1,Pbuf1),
 		
 		write('\nPlateau après un coup du joueur 1.'),
-		print_plateau_tour(Pbuf1, N),
-		%nextStep(Pbuf1),
+		%print_plateau_tour(Pbuf1, N),
+		nextStep(Pbuf1),
 		%sleep(3),
 		
 		!,
