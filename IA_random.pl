@@ -3,7 +3,8 @@
 /*
 	###	IA Random	###
 	- premier coup (fonction premierCoupIA_random): random sur les pions que l'on peut déplacer (= random sur la colonne)
-	- coup supplémentaire (fonction supplementaireCoupIA_random): random sur la colonne puis sur la longueur de déplacement avec la fonction findCP
+	- coup supplémentaire (fonction supplementaireCoupIA_random): random sur la colonne puis sur la longueur de déplacement avec la fonction trouverCT
+	do
 	
 	Entre les deux fonctions, on modifie le plateau dans un plateau buffer pour le passer à supplementaireCoupIA_random.
 */
@@ -92,7 +93,9 @@ premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
 							Carrivee is C-1,
 							trouverCP(Carrivee, J, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is -1.
-
+/*
+ *utilisation de random pour tirer au sort entre deux membres désirés.
+ * */
 random_entre(Min,Max,R)	:-	XBuf is random(Max),
 				R is XBuf+Min.
 
@@ -126,8 +129,14 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
 							L is -L2,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
-
+/*
+ *getArrivee : Arrivee est la colonne d'arrivée du mouvement de C et de longueur L.
+ * */
 getArrivee([C,L|[]], Arrivee) :- Arrivee is C + L .
+/*
+ *epurerTodo : nettoie la liste des Coups générée par l'ia random, pour les cas où un coup supplémentaire amène un pion au bout.
+ *Dans ce cas, CP devient 0, ce qui équivaut à supprimer les mouvement qui suivent dans la liste.
+ * */
 epurerTodo([], [], _).
 epurerTodo([H1|_], [H1|[]], J)	:-	J == 0,
 					getArrivee(H1, Arrivee),
@@ -152,6 +161,9 @@ concat([],[X|[]],[X|[]]).
 concat([],[X|L2],[X|L3]) :- concat([],L2,L3).
 concat([X|L1] , L2, [X|L3]) :- concat(L1,L2,L3).
 
+/*
+ * Fonction appelée par partie.pl
+ * */
 coupIA_random(P,J, LTodo) :- 	premierCoupIA_random(P, J, LTodo1, CP),
 				modifier(P, J, LTodo1, Pbuf),
 				supplementaireCoupIA_random(Pbuf, J, LTodo2, CP),
