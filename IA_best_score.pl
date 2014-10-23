@@ -15,8 +15,13 @@ annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précéde
 annulerCP(PJ,T,T) :- PJ\=0.
 
 annulerCP([PJ1,_],_,0,[T|Q],[L2|Q]) :- annulerCP(PJ1,T,L2).
-annulerCP(_,[T2|_],1,[T|Q],[L2|Q]) :- 
-	T2=[_,PJ2],
+
+annulerCP(_,[_|[]],1,[T|Q],[L2|Q]) :- 
+	L2 is 0. % annule le CP si ça correspond au départ du deuxième joueur.
+	
+annulerCP(_,[_|Q2],1,[T|Q],[L2|Q]) :- 
+	Q2=[Q3|_],
+	Q3=[_,PJ2],
 	annulerCP(PJ2,T,L2).
 
 /*
