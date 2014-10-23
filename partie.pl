@@ -29,7 +29,7 @@ jeu:-
 tour(_,0).
 tour :- 	plat(P),
 			
-		nextStep(P),
+		%nextStep(P),
 		tourNumero(N),
 		J1 is 0,
 		J2 is 1,
@@ -40,8 +40,8 @@ tour :- 	plat(P),
 		modifier(P,J1,LTodo1,Pbuf1),
 		
 		write('\nPlateau après un coup du joueur 1.'),
-		%print_plateau_tour(Pbuf1, N),
-		nextStep(Pbuf1),
+		print_plateau_tour(Pbuf1, N),
+		%nextStep(Pbuf1),
 		%sleep(3),
 		
 		!,
@@ -56,7 +56,7 @@ tour :- 	plat(P),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 
 		write('\nPlateau après un coup du joueur 2.'),
-		%print_plateau_tour(Pbuf2, N),
+		print_plateau_tour(Pbuf2, N),
 		
 		%sleep(3),
 		

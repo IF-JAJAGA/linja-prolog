@@ -9,12 +9,16 @@ lzero([[12,0],[2,1],[0,0],[2,4]]).
 lun([[12,0],[0,3],[6,0],[0,1]]).
 
 comp_fini([],_,_,_).
-comp_fini([A,B,C,D|L],P0,P1,G) :-
-	L0 = [A,B,C,D],
-	inverser_termes(L,LA),
-	reverse(LA,L1),
-	fini(0,L0),
-	trouver_gagnant(L0,L1,P0,P1,G).
+comp_fini([A,B,C,D|LA],P0,P1,G) :-
+	L = [A,B,C,D],
+	inverser_termes(L,L1),
+	reverse(LA,L0),
+	inverser_termes(LA,L01),
+	(fini(0,L) | fini(0,L01)), 
+	trouver_gagnant(L0,L1,P0,P1,G),
+	write('P0 = '),writeln(P0),
+	write('P1 = '),writeln(P1),
+	write('G = '),writeln(G).
 
 trouver_gagnant([],[],_,_,_).
 trouver_gagnant(L0,L1,P0,P1,G) :-
@@ -33,16 +37,13 @@ inverser_termes([T|Q],L) :-
 	reverse(T,R),
 	inverser_termes(Q,P),
 	L = [R|P].
-	
-	
 
-fini(0,[]) :-
-	print('FINI, EO').
+fini(0,[]).
 fini(0,[T|Q]) :- 
 	T = [TT|TQ],
 	fini(TT,Q).
 
-% il faut appeler avec la liste 2 inversée ses thermes et elle aussi inversé.
+% il faut appeler avec la liste 2 inversée ses termes et elle aussi inversé.
 % on compte de 5 a 2.
 
 compter_points(_,1,P) :-
