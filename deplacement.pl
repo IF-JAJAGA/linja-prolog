@@ -47,12 +47,20 @@ increment(C,J) :-
 %Liste de test pour increment/decrement	[[1,2], [3,4], [5,6], [7,8]]
 
 
-%% findCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre de coups restants.
+%% trouverCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre CP de coups restants. Si la colonne vaut 0 ou 8 (bases), CP vaut 1.
+% !!! Bien utiliser trouverCP et pas findCP (problème pour la colonne 0 car utilisation par findCP dans la récursivité).
+%trouverCP(Colonne, Joueur, Plateau, CP).
+trouverCP(0, 0, _, 0).
+trouverCP(0, 1, _, 1).
+trouverCP(7, 1, _, 0).
+trouverCP(7, 0, _, 1).
+trouverCP(C, _, P, CP) :- 	C \== 0, C\==7,
+			findCP(C,P,CP).
 findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2. %Calcul du nombre de pions avant le premier coup (sinon rajouter -1)
 findCP(0, [H|_], CP) :- findCP(H, CP).
 findCP(7, [H|_], CP) :- findCP(H, CP).
-findCP(-1, _, 0).
-findCP(8, _, 0).
+%findCP(-1, _, 0).
+%findCP(7, _, 1).
 findCP(C, [_|Q], CP) :- C > 0, C < 7, C1 is C-1, findCP(C1, Q, CP).
 
 
