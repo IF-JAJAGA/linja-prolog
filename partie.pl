@@ -18,7 +18,7 @@ Lance une partie en gérant :
 
 :-dynamic(plat/1).
 :-dynamic(tourNumero/1).
-plat([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]]).
+plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]]).
 tourNumero(0).
 
 jeu:-
@@ -28,6 +28,8 @@ jeu:-
 
 tour(_,0).
 tour :- 	plat(P),
+			
+		nextStep(P),
 		tourNumero(N),
 		J1 is 0,
 		J2 is 1,
@@ -55,7 +57,7 @@ tour :- 	plat(P),
 
 		write('\nPlateau après un coup du joueur 2.'),
 		%print_plateau_tour(Pbuf2, N),
-		nextStep(Pbuf1),
+		
 		%sleep(3),
 		
 		!,
