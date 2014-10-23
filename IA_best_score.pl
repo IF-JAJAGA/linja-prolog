@@ -1,6 +1,15 @@
 :- use_module(library(lists)).
 
+/*
+Fonction à appeler pour lancer l'IA Best_Score
+*/
 
+coupIA_ToTheEnd(P,J,L) :-
+	genererliste(0,P,J,LCP),
+	trouvermax(LCP,J,CP,TodoPC),
+	supplementaireFinal(P,CP,J,TodoDC),
+	L = [TodoPC,TodoDC],!.
+	
 %fonctions banales pour générer un plateau de ce type
 test(P) :- P = [[2,1],[1,0],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
 plateau(X) :- X = ([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]]).
@@ -181,7 +190,7 @@ supplementaireFinal(Plateau, CP, Joueur, CoupAFaire)
 Renvoie la liste CoupAFaire de type [Depart,Avancée]
 */
 
-supplementaireFinal(P, CP, 0,LTodo) :- 
+supplementaireFinal(P, CP, 0, LTodo) :- 
 	C is 7-CP,
 	nth0(C, P, Val),
 	Val=[TV,_],
@@ -196,7 +205,7 @@ supplementaireFinal(P, CP, 0,LTodo) :-
 			LTodo = [[I1,CNO],[I,CNE]])).
 
 
-supplementaireFinal(P, CP, 1,LTodo) :- 
+supplementaireFinal(P, CP, 1, LTodo) :- 
 	nth0(CP, P, Val),
 	Val=[_,QV],
 	(QV\=0 ->
@@ -208,3 +217,4 @@ supplementaireFinal(P, CP, 1,LTodo) :-
 			chercherPlusProche(P,1,0,I1),
 			CNO is CP - CNE,
 			LTodo = [[I1,-CNO],[I,-CNE]])).
+			
