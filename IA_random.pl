@@ -82,7 +82,7 @@ premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 0,
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
 							Carrivee is C+1,
-							findCP(Carrivee, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
+							trouverCP(Carrivee, J, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is 1.
 premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
 							coupsPossibles(J, LPl, LCols),
@@ -90,7 +90,7 @@ premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
 							Col is random(Lenght),	%On trouve le pion
 							nth_element(Col,C,LCols),
 							Carrivee is C-1,
-							findCP(Carrivee, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
+							trouverCP(Carrivee, J, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is -1.
 
 random_entre(Min,Max,R)	:-	XBuf is random(Max),
@@ -127,6 +127,25 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
 
+getArrivee([C,L|[]], Arrivee) :- Arrivee is C + L .
+epurerTodo([], [], _).
+epurerTodo([H1|_], [H1|[]], J)	:-	J == 0,
+					getArrivee(H1, Arrivee),
+					Arrivee == 7.
+epurerTodo([H1|Q1], [H1|Q2], J)	:-	J == 0,
+					getArrivee(H1, Arrivee),
+					Arrivee \== 7,
+					epurerTodo(Q1, Q2, J).
+
+epurerTodo([H1|_], [H1|[]], J)	:-	J == 1,
+					getArrivee(H1, Arrivee),
+					Arrivee == 0.
+epurerTodo([H1|Q1], [H1|Q2], J)	:-	J == 1,
+					getArrivee(H1, Arrivee),
+					Arrivee \== 0,
+					epurerTodo(Q1, Q2, J).
+
+
 %Concaténation de deux listes dans une troisieme.
 concat([], [], []).	%Condition d'arrêt où la seconde liste est vide.
 concat([],[X|[]],[X|[]]).
@@ -136,4 +155,5 @@ concat([X|L1] , L2, [X|L3]) :- concat(L1,L2,L3).
 coupIA_random(P,J, LTodo) :- 	premierCoupIA_random(P, J, LTodo1, CP),
 				modifier(P, J, LTodo1, Pbuf),
 				supplementaireCoupIA_random(Pbuf, J, LTodo2, CP),
-				concat(LTodo1, LTodo2, LTodo).
+				epurerTodo(LTodo2, LTodoBuf, J),
+				concat(LTodo1, LTodoBuf, LTodo).
