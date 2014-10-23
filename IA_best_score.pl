@@ -195,18 +195,16 @@ supplementaireFinal(P, CP, 0,LTodo) :-
 			CNO is CP - CNE,
 			LTodo = [[I1,CNO],[I,CNE]])).
 
-/*
-supplementaireFinal(P, CP, 1,[T,Q]) :- 
+
+supplementaireFinal(P, CP, 1,LTodo) :- 
 	nth0(CP, P, Val),
 	Val=[_,QV],
-	QV\=0,
-		T is (CP), Q is (-CP),
-		CP is 0, !;
-		lamerdeeeeeee).
-*/
-	
-%supplementaireFinalBis(P,CP, 0, [T|Q]) :-
-	
-
-%Un seul coup qui amène un pion au bout avec tout le CP.
-%IA_best_supplementaire(P, J, [C,L|[]], CP) :-
+	(QV\=0 ->
+		LTodo = [[CP,-CP]];
+		chercherPlusEloigne(P,1,0,I),
+		CNE is I,
+		(CNE > CP ->
+			LTodo = [I,-CP];
+			chercherPlusProche(P,1,0,I1),
+			CNO is CP - CNE,
+			LTodo = [[I1,-CNO],[I,-CNE]])).
