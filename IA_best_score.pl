@@ -1,6 +1,5 @@
-
 %fonctions banales pour générer un plateau de ce type
-test(P) :- P = [[3,0],[0,1],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
+test(P) :- P = [[2,1],[1,0],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
 plateau(X) :- X = ([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]]).
 
 /*
@@ -29,28 +28,47 @@ annulerCP(_,[_|Q2],1,[T|Q],[L2|Q]) :-
 	Q3=[_,PJ2],
 	annulerCP(PJ2,T,L2).
 
+%fonction neutre de ajusterTetePlateau qui renvoie PJTA = PJT (on est pas en tête de liste)
+ajusterTetePlateau(N,PJT,_,_,PJT) :- N\=0.
+	
+%ajuste le CP de la base du joueur 0
+ajusterTetePlateau(0,_,_,0,PJTA) :-	PJTA is 0.	
+	
+%ajuste le CP du camp adverse pour le joueur 1
+ajusterTetePlateau(0,_,Q,1,PJTA) :-
+	Q=[T|_],
+	T=[_,T1],
+	T1==0,
+	PJTA is 0.
+	
+ajusterTetePlateau(0,_,Q,1,PJTA) :-
+	Q=[T|_],
+	T=[_,T1],
+	T1\=0,
+	PJTA is 1.
+	
 /*
 Fonction qui génère une liste de CP correspondant aux colonnes du plateau
 Chaque CP est calculé et ajusté en fonction que la colonne est déjà pleine ou si, en fonction du joueur, aucun pion ne peut arriver sur cette case.
-Elle prend en paramètre la liste de liste qui compose le plateau,
-le numéro du joueur J,
+On gère également les CPs pour les bases adversaires ou de soi-même.
+Elle prend en paramètre le numéro de l'action en cours (donc, à l'appel de la fonction N=0,
+la liste de liste qui compose le plateau,
+le numéro du joueur J (0 ou 1),
 et renvoie la liste L de CPs
+
+Type d'appel : genererliste(0,Plateau,Joueur,ListeRetounée).
 */
-genererliste([],_,[]).
-genererliste(Plateau, J, L) :-
+
+genererliste(_,[],_,[]).
+genererliste(N, Plateau, J, L) :-
 	Plateau = [T|Q],
 	T=[PJ1,PJ2],
 	PJT is PJ1+PJ2,
-	genererliste(Q,J,L1),
+	N1 is N+1,
+	genererliste(N1,Q,J,L1),
 	annulerCP(T,Q,J,L1,L2),
-	L = [PJT|L2],!.
-	
-
-	
-
-
-			
-			
+	ajusterTetePlateau(N,PJT,Q,J,PJTA),
+	L = [PJTA|L2],!.			
 
 /*	----- Jérôme -----
  * */
@@ -58,27 +76,6 @@ genererliste(Plateau, J, L) :-
  /*Cette fonction genere une liste avec le nombre de coups possibles si on se déplace a chaque colonne du plateau dans le premier coup.
  Dans les colonnes où il y a déjà 6 jetons on met un 0 car on ne va pas se déplacer vers elles. On met un 0 aussi pour la colonne de départ du joueur car il ne peut pas bouger là bas.
  Dans la colonne de fin (la plus eloignée pour le joueur on met un 1 car les régles marquent que c'est le nombre de coups aditionnels qu'on reçoit si on y tombe.'*/
- 
-/*
- * 	Exemples :
- * [debug]  ?- genererlisteCP([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]], 0, L).
- * L = [0, 0, 0, 0, 0, 0, 0, 1] ;
- * [debug]  ?- genererlisteCP([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]], 0, L).
- * L = [0, 1, 2, 3, 4, 6, 5, 1] ;
- * [debug]  ?- genererlisteCP([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]], 1, L).
- * L = [1, 1, 2, 3, 4, 6, 5, 0] .
- * */
-%genererlisteCP(Plateau, Joueur, ListeSortante).
-genererlisteCP(P, J, L) :- genererlisteCP(P, J, L, 0).
-
-genererlisteCP(P, J, [CP|[]], C):-	C == 7,
-					trouverCP(C, J, P, CP).
-
-genererlisteCP(P, J, [CP|Q], C)	:- 	C \==7,
-					trouverCP(C, J, P, CP),
-					C1 is C+1,
-					genererlisteCP(P, J, Q, C1).
-
 
 %getNbPionsColonne(Plateau, ColonneVOulue, Joueur, NbSortie)
 getNbPionsColonne([H|_], 0, J, Nb) :- 	pionsJ(J, H, Nb).	
