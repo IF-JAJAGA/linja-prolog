@@ -1,13 +1,16 @@
 :- use_module(library(lists)).
 
+
 %fonctions banales pour générer un plateau de ce type
 test(P) :- P = [[2,1],[1,0],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
 plateau(X) :- X = ([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]]).
+
 
 /*
 Ensemble des fonctions annulerCP qui va annuler le CP dans la liste renvoyée par genererliste dans les cas où aucun pion n'arrive à ce point
 ou si la colonne est totalement pleine (6 pions dans la colonne)
 */
+
 annulerCP(_,_,_,[],[]).
 annulerCP(_,6,0). % annule le CP si le CP calculé est de 6
 annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente
@@ -30,7 +33,9 @@ annulerCP(_,[_|Q2],1,[T|Q],[L2|Q]) :-
 	Q3=[_,PJ2],
 	annulerCP(PJ2,T,L2).
 
+	
 %fonction neutre de ajusterTetePlateau qui renvoie PJTA = PJT (on est pas en tête de liste)
+
 ajusterTetePlateau(N,PJT,_,_,PJT) :- N\=0.
 	
 %ajuste le CP de la base du joueur 0
@@ -48,6 +53,7 @@ ajusterTetePlateau(0,_,Q,1,PJTA) :-
 	T=[_,T1],
 	T1\=0,
 	PJTA is 1.
+
 	
 /*
 Fonction qui génère une liste de CP correspondant aux colonnes du plateau
@@ -71,19 +77,6 @@ genererliste(N, Plateau, J, L) :-
 	annulerCP(T,Q,J,L1,L2),
 	ajusterTetePlateau(N,PJT,Q,J,PJTA),
 	L = [PJTA|L2],!.			
-
-/*	----- Jérôme -----
- * */
-
- /*Cette fonction genere une liste avec le nombre de coups possibles si on se déplace a chaque colonne du plateau dans le premier coup.
- Dans les colonnes où il y a déjà 6 jetons on met un 0 car on ne va pas se déplacer vers elles. On met un 0 aussi pour la colonne de départ du joueur car il ne peut pas bouger là bas.
- Dans la colonne de fin (la plus eloignée pour le joueur on met un 1 car les régles marquent que c'est le nombre de coups aditionnels qu'on reçoit si on y tombe.'*/
-
-%getNbPionsColonne(Plateau, ColonneVOulue, Joueur, NbSortie)
-getNbPionsColonne([H|_], 0, J, Nb) :- 	pionsJ(J, H, Nb).	
-getNbPionsColonne([H|Q], C, J, Nb)	:-	C \==0,
-						C1 is C-1,
-						getNbPionsColonne(Q, C1, J, Nb).
 
 
 /* Il trouve la case où on obtient un Capital de Points plus grand. Il retourne une liste avec la liste de mouvements (soit 1 mouvement) à faire (listeTODO) et le capital de points à obtenir */
@@ -122,22 +115,90 @@ trouvermaxA([T|Q],CP,I,N) :-
 			CP = CP1,
 			I = I1)).						
 						
-						
-/*Suite des fonctions pas finies.*/
 
-%supplementaireFinal(Plateau, CP, Joueur, CoupAFaire) : correspond au premier si de l'algo : on amène le pion au final avec tout le cp
+/*
+chercherPlusEloigne permet de trouver le pion du joueur se trouvant le plus près de la base adverse et renvoie sa position.
+*/
+%chercherPlusEloigne(plateau, position)
+
+chercherPlusEloigne([_|[]],1,N,N).
+chercherPlusEloigne([_|[]],0,N,PO) :-
+	PO is -1.
+chercherPlusEloigne([T|Q],0,N,PO) :-
+	T=[T1|_],
+	N1 is N + 1,
+	chercherPlusEloigne(Q,0,N1,PO1),!,
+	(PO1 > 0 ->
+		PO = PO1;
+		( T1 > 0 ->
+		PO = N;
+		PO is PO1)).
+		
+chercherPlusEloigne([T|Q],1,N,PO) :-
+	T=[_|Q1],
+	N1 is N + 1,
+	chercherPlusEloigne(Q,1,N1,PO1),!,
+	(N == 0 ->
+		PO = PO1;
+		(Q1 > 0 ->
+			PO = N;
+			PO = PO1)).
+
+/*
+chercherPlusProche
+*/
+%chercherPlusProche(plateau, Joueur, PostionDansPlateau, PositionDuPion)
+
+chercherPlusProche([T|[]],1,N,PO) :- 
+	T = [_|Q1],
+	(Q1 > 0 ->
+		PO is N;
+		PO is -1).
+	
+chercherPlusProche([_|[]],0,_,_).
+	
+chercherPlusProche([T|Q],1,N,PO) :-
+	T=[_|Q1],
+	N1 is N + 1,
+	chercherPlusProche(Q,1,N1,PO1),!,
+	(PO1 > 0 ->
+		PO = PO1;
+		( Q1 > 0 ->
+		PO = N;
+		PO is PO1)).
+	
+chercherPlusProche([T|Q],0,N,PO) :-
+	T=[T1|_],
+	(T1 == 0 ->
+		N1 is N + 1,
+		chercherPlusProche(Q,0,N1,PO1),!,
+		PO = PO1;
+		PO = N).
+		
+
+/*
+supplementaireFinal(Plateau, CP, Joueur, CoupAFaire)
+Renvoie la liste CoupAFaire de type [Depart,Avancée]
+*/
+
 supplementaireFinal(P, CP, 0,[T,Q]) :- 
 	C is 7-CP,
 	nth0(C, P, Val),
 	Val=[TV,_],
 	TV\=0,
-	T is (C), Q is CP,!.
+	T is (C), Q is CP,
+	CP is 0, !.
 	
 supplementaireFinal(P, CP, 1,[T,Q]) :- 
 	nth0(CP, P, Val),
 	Val=[_,QV],
 	QV\=0,
-	T is (CP), Q is (-CP),!.
+	T is (CP), Q is (-CP),
+	CP is 0, !.
+
+	
+%supplementaireFinalBis(P,CP, 0, [T|Q]) :-
+	
 
 %Un seul coup qui amène un pion au bout avec tout le CP.
 %IA_best_supplementaire(P, J, [C,L|[]], CP) :-
