@@ -20,14 +20,15 @@ Ensemble des fonctions annulerCP qui va annuler le CP dans la liste renvoyée pa
 ou si la colonne est totalement pleine (6 pions dans la colonne)
 */
 
-annulerCP(_,_,_,[],[]).
+
 annulerCP(_,6,0). % annule le CP si le CP calculé est de 6
 annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente
 annulerCP(PJ,T,T) :- PJ\=0.
 
+annulerCP(_,_,_,[],[]).
 %règle le cas du CP de la base adverse pour le joueur 0
-annulerCP([PJ1,_],[_|QL],0,[_|Q],[L2|Q]) :- QL==[], PJ1==0, L2 is 0.
-annulerCP([PJ1,_],[_|QL],0,[_|Q],[L2|Q]) :- QL==[], PJ1\=0, L2 is 1.
+annulerCP([0,_],[_|[]],0,[_|Q],[L2|Q]) :- L2 is 0.
+annulerCP([PJ1,_],[_|[]],0,[_|Q],[L2|Q]) :- PJ1\=0, L2 is 1.
 
 %Appel récursif du calcul de CP pour le joueur 0
 annulerCP([PJ1,_],_,0,[T|Q],[L2|Q]) :- annulerCP(PJ1,T,L2).
@@ -107,22 +108,16 @@ trouvermax(L,J,CP,LTODO) :-
 
 trouvermaxA([],CP,I,_) :-
 	CP = -1,
-	IP = -1.
+	I = -1.
 trouvermaxA([T|Q],CP,I,N) :-
 	N1 is N +1,
 	trouvermaxA(Q,CP1,I1,N1),
-	
-	(J == 0 ->
-		(T >= CP1 ->
-			CP = T,
-			I = N;
-			CP = CP1,
-			I = I1);
-		(T > CP1 ->
-			CP = T,
-			I = N;
-			CP = CP1,
-			I = I1)).						
+
+	(T >= CP1 ->
+		CP = T,
+		I = N;
+		CP = CP1,
+		I = I1);						
 						
 
 /*
@@ -131,7 +126,7 @@ chercherPlusEloigne permet de trouver le pion du joueur se trouvant le plus prè
 %chercherPlusEloigne(plateau, position)
 
 chercherPlusEloigne([_|[]],1,N,N).
-chercherPlusEloigne([_|[]],0,N,PO) :-
+chercherPlusEloigne([_|[]],0,_,PO) :-
 	PO is -1.
 chercherPlusEloigne([T|Q],0,N,PO) :-
 	T=[T1|_],
