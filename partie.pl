@@ -43,8 +43,8 @@ tour() :- 	plat(P),
 
 		%%Jeu du joueur 1
 		%coup_rapide(P, J1, LTodo1),
-		%coupIA_ToTheEnd(P, J1, LTodo1),
-		coupIA_random(P,J1,LTodo1),
+		coupIA_ToTheEnd(P, J1, LTodo1),
+		%coupIA_random(P,J1,LTodo1),
 		print(LTodo1),
 		modifier(P,J1,LTodo1,Pbuf1),
 		
@@ -63,6 +63,7 @@ tour() :- 	plat(P),
 		%coup_rapide(Pbuf1, J2, LTodo2),
 		coupIA_random(Pbuf1,J2,LTodo2),
 		%coupIA_ToTheEnd(Pbuf1, J2, LTodo2),
+		print(LTodo2),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 
 		write('\nPlateau après un coup du joueur 2.'),
