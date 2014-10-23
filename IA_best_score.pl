@@ -145,7 +145,7 @@ chercherPlusEloigne([T|Q],1,N,PO) :-
 			PO = PO1)).
 
 /*
-chercherPlusProche
+chercherPlusProche permet de trouver le pion du joueur le plus proche de sa base et renvoie sa position
 */
 %chercherPlusProche(plateau, Joueur, PostionDansPlateau, PositionDuPion)
 
@@ -181,21 +181,29 @@ supplementaireFinal(Plateau, CP, Joueur, CoupAFaire)
 Renvoie la liste CoupAFaire de type [Depart,Avancée]
 */
 
-supplementaireFinal(P, CP, 0,[T,Q]) :- 
+supplementaireFinal(P, CP, 0,LTodo) :- 
 	C is 7-CP,
 	nth0(C, P, Val),
 	Val=[TV,_],
-	TV\=0,
-	T is (C), Q is CP,
-	CP is 0, !.
-	
+	(TV\=0 ->
+		LTodo = [[C,CP]];
+		chercherPlusEloigne(P,0,0,I),
+		CNE is 7 - I,
+		(CNE > CP ->
+			LTodo = [[I,CP]];
+			chercherPlusProche(P,0,0,I1),
+			CNO is CP - CNE,
+			LTodo = [[I1,CNO],[I,CNE]])).
+
+/*
 supplementaireFinal(P, CP, 1,[T,Q]) :- 
 	nth0(CP, P, Val),
 	Val=[_,QV],
 	QV\=0,
-	T is (CP), Q is (-CP),
-	CP is 0, !.
-
+		T is (CP), Q is (-CP),
+		CP is 0, !;
+		lamerdeeeeeee).
+*/
 	
 %supplementaireFinalBis(P,CP, 0, [T|Q]) :-
 	
