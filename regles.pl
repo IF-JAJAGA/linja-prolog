@@ -90,7 +90,7 @@ est_licite(P,Coups,J) :-
 	increment(Arrivee,J,P2,P3),!,
 	est_licite(P3,Q, J, CP),
 	decrement(Arrivee,J,P3,P4),
-	increment(Depart,J,P4,P5),!.
+	increment(Depart,J,P4,_),!.
 
 % ======================================== TESTS ==========================================
 :- begin_tests(regles).
