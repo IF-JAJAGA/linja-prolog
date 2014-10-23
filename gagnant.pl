@@ -15,7 +15,10 @@ comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	reverse(LA,L0),
 	inverser_termes(LA,L01),
 	(fini(0,L) | fini(0,L01)), 
-	trouver_gagnant(L0,L1,P0,P1,G).
+	trouver_gagnant(L0,L1,P0,P1,G),
+	write('P0 = '),writeln(P0),
+	write('P1 = '),writeln(P1),
+	write('G = '),writeln(G).
 
 trouver_gagnant([],[],_,_,_).
 trouver_gagnant(L0,L1,P0,P1,G) :-
