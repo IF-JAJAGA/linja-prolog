@@ -6,6 +6,7 @@ plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 
 
 % Prouve que l'element d'indice N a pour valeur Val dans List.
+% DEPRECATED !!!! Utiliser le prédicat prédéfini nth0
 nth_element(0,Val,[Val|_]).
 nth_element(N,Val,List) :-
 	List = [_|Q],
@@ -65,7 +66,7 @@ case_pleine(P,Ncase) :-
 	Npions >= 6.
 
 % Prouve que les coups sont possibles pour le joueur J en CP mouvements.
-est_licite(_,[], _, 0).
+est_licite(_,[],_,_).
 est_licite(P,Coups,J,CP) :-
 	Coups = [T|Q],
 	T = [TCoup|QCoup],
@@ -75,14 +76,15 @@ est_licite(P,Coups,J,CP) :-
 
 est_licite(P,Coups,J) :-
 	Coups = [T|Q],
-	nth_element(0,Depart,T),
-	nth_element(1,PM,T),
+	nth0(0,T,Depart),
+	nth0(1,T,PM),
 	Arrivee is Depart + PM,
 	not(case_pleine(P,Arrivee)),
+	sur_plateau(Coups),
 	nombre_pions(P,Arrivee,CP),
-	increment(Arrivee,J,P,NewP),
-	est_licite(NewP,Q, J, CP),
-	decrement(Arrivee,J,NewP,P).
+	increment(Arrivee,J,P,P2),!,
+	est_licite(P2,Q, J, CP),
+	decrement(Arrivee,J,P2,P3),!.
 
 % ======================================== TESTS ==========================================
 :- begin_tests(regles).
