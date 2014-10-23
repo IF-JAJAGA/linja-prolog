@@ -80,7 +80,7 @@ premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 0,
 							coupsPossibles(J, LPl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
-							nth_element(Col,C,LCols),
+							nth0(Col,LCols,C),
 							Carrivee is C+1,
 							trouverCP(Carrivee, J, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is 1.
@@ -88,7 +88,7 @@ premierCoupIA_random(LPl, J, [[C,L|[]]], CP) :- 	J == 1,
 							coupsPossibles(J, LPl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
-							nth_element(Col,C,LCols),
+							nth0(Col,LCols,C),
 							Carrivee is C-1,
 							trouverCP(Carrivee, J, LPl, CP),	%Calcul de CP à l'endroit où j'arrive.
 							L is -1.
@@ -108,7 +108,7 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 0,
 							coupsPossibles(J, Lpl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
-							nth_element(Col,C,LCols),
+							nth0(Col,LCols,C),
 							random_entre(1,CP,L1),
 							pasDepasserPlateau(7, C, L1, L),
 							NCP is CP - L,
@@ -119,7 +119,7 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
 							coupsPossibles(1, Lpl, LCols),
 							length(LCols, Lenght),
 							Col is random(Lenght),	%On trouve le pion
-							nth_element(Col,C,LCols),
+							nth0(Col,LCols,C),
 							random_entre(1,CP,L1),
 							pasDepasserPlateau(0, C, L1, L2),
 							NCP is CP - L2,
