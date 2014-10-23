@@ -106,3 +106,41 @@ trouvermax2([T|Q],CP,I,N) :-
 		I = N;
 		CP = CP1,
 		I = I1).
+
+/*	----- Jérôme -----
+ * */
+
+/*
+ * 	Exemples :
+ * [debug]  ?- genererlisteCP([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]], 0, L).
+ * L = [0, 0, 0, 0, 0, 0, 0, 1] ;
+ * [debug]  ?- genererlisteCP([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]], 0, L).
+ * L = [0, 1, 2, 3, 4, 6, 5, 1] ;
+ * [debug]  ?- genererlisteCP([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]], 1, L).
+ * L = [1, 1, 2, 3, 4, 6, 5, 0] .
+ * */
+%genererlisteCP(Plateau, Joueur, ListeSortante).
+genererlisteCP(P, J, L) :- genererlisteCP(P, J, L, 0).
+
+genererlisteCP(P, J, [CP|[]], C):-	C == 7,
+					trouverCP(C, J, P, CP).
+
+genererlisteCP(P, J, [CP|Q], C)	:- 	C \==7,
+					trouverCP(C, J, P, CP),
+					C1 is C+1,
+					genererlisteCP(P, J, Q, C1).
+
+
+%getNbPionsColonne(Plateau, ColonneVOulue, Joueur, NbSortie)
+getNbPionsColonne([H|_], 0, J, Nb) :- 	pionsJ(J, H, Nb).	
+getNbPionsColonne([H|Q], C, J, Nb)	:-	C \==0,
+						C1 is C-1,
+						getNbPionsColonne(Q, C1, J, Nb).
+
+/*Suite des fonctions pas finies.*/
+
+%supplementaireFinal(Plateau, CP, Joueur) : correspond au premier si de l'algo : on amène le pion au final avec tout le cp
+%supplementaireFinal(P, CP, 0).
+
+%Un seul coup qui amène un pion au bout avec tout le CP.
+%IA_best_supplementaire(P, J, [C,L|[]], CP) :-
