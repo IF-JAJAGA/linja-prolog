@@ -49,8 +49,12 @@ increment(C,J) :-
 
 %% trouverCP : trouve le nombre de pions à la colonne voulue et ajuste le nombre CP de coups restants. Si la colonne vaut 0 ou 8 (bases), CP vaut 1.
 % !!! Bien utiliser trouverCP et pas findCP (problème pour la colonne 0 car utilisation par findCP dans la récursivité).
-trouverCP(0, _, 1).
-trouverCP(C, P, CP) :- 	C \== 0,
+%trouverCP(Colonne, Joueur, Plateau, CP).
+trouverCP(0, 0, _, 0).
+trouverCP(0, 1, _, 1).
+trouverCP(8, 1, _, 0).
+trouverCP(8, 0, _, 1).
+trouverCP(C, _, P, CP) :- 	C \== 0, C\==8,
 			findCP(C,P,CP).
 findCP([CP1,CP2|[]], CP) :- CP is CP1+CP2. %Calcul du nombre de pions avant le premier coup (sinon rajouter -1)
 findCP(0, [H|_], CP) :- findCP(H, CP).
