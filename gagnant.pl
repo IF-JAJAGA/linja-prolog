@@ -18,7 +18,9 @@ comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	trouver_gagnant(L0,L1,P0,P1,G),
 	write('P0 = '),writeln(P0),
 	write('P1 = '),writeln(P1),
-	write('G = '),writeln(G).
+	write('G = '),writeln(G),
+	joueurGagnant(Buf),
+	retract(joueurGagnant(Buf)), assert(joueurGagnant(G)).
 
 trouver_gagnant([],[],_,_,_).
 trouver_gagnant(L0,L1,P0,P1,G) :-

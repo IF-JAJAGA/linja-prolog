@@ -18,8 +18,10 @@ Lance une partie en gérant :
 
 :-dynamic(plat/1).
 :-dynamic(tourNumero/1).
+:-dynamic(joueurGagnant/1).
 plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]]).
 tourNumero(0).
+joueurGagnant(0).
 
 jeu:-
 	create_plateau,
@@ -27,7 +29,7 @@ jeu:-
 	free_GUI_components.
 
 tour(_,0).
-tour :- 	plat(P),
+tour() :- 	plat(P),
 			
 		%nextStep(P),
 		tourNumero(N),
@@ -47,7 +49,6 @@ tour :- 	plat(P),
 		!,
 
 		not(comp_fini(Pbuf1, P0, P1, G)),
-		
 
 		!,
 
@@ -71,3 +72,20 @@ tour :- 	plat(P),
 		retract(tourNumero(N)), assert(tourNumero(N1)),
 		
 		tour.
+%incrementStat(NP0, NP1, 0)
+incrementStat(1, 0, 0). 
+incrementStat(0, 1, 1).
+incrementStat(0, 0, 2).
+statistiques(0,0,0).
+statistiques(NP0, NP1, NBParties) :-	not(tour),
+					!,
+
+					joueurGagnant(G),
+					incrementStat(NP0Buf, NP1Buf, G),
+					NBPartiesNew is NBParties-1,
+
+					retract(plat(P)), assert(plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]])),
+
+					statistiques(NP0New, NP1New, NBPartiesNew),
+					NP0 is NP0New + NP0Buf,
+					NP1 is NP1New + NP1Buf.
