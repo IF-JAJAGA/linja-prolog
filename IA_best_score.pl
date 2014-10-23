@@ -11,14 +11,21 @@ ou si la colonne est totalement pleine (6 pions dans la colonne)
 */
 annulerCP(_,_,_,[],[]).
 annulerCP(_,6,0). % annule le CP si le CP calculé est de 6
-annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente.
+annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente
 annulerCP(PJ,T,T) :- PJ\=0.
 
+%règle le cas du CP de la base adverse pour le joueur 0
+annulerCP([PJ1,_],[_|QL],0,[_|Q],[L2|Q]) :- QL==[], PJ1==0, L2 is 0.
+annulerCP([PJ1,_],[_|QL],0,[_|Q],[L2|Q]) :- QL==[], PJ1\=0, L2 is 1.
+
+%Appel récursif du calcul de CP pour le joueur 0
 annulerCP([PJ1,_],_,0,[T|Q],[L2|Q]) :- annulerCP(PJ1,T,L2).
 
-annulerCP(_,[_|[]],1,[T|Q],[L2|Q]) :- 
+%règle le cas du CP de la base du joueur 1
+annulerCP(_,[_|[]],1,[_|Q],[L2|Q]) :- 
 	L2 is 0. % annule le CP si ça correspond au départ du deuxième joueur.
-	
+
+%Appel récursif du calcul de CP pour le joueur 1
 annulerCP(_,[_|Q2],1,[T|Q],[L2|Q]) :- 
 	Q2=[Q3|_],
 	Q3=[_,PJ2],
