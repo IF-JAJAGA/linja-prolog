@@ -1,3 +1,5 @@
+:- use_module(library(lists)).
+
 %fonctions banales pour générer un plateau de ce type
 test(P) :- P = [[2,1],[1,0],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
 plateau(X) :- X = ([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]]).
@@ -123,8 +125,19 @@ trouvermaxA([T|Q],CP,I,N) :-
 						
 /*Suite des fonctions pas finies.*/
 
-%supplementaireFinal(Plateau, CP, Joueur) : correspond au premier si de l'algo : on amène le pion au final avec tout le cp
-%supplementaireFinal(P, CP, 0).
+%supplementaireFinal(Plateau, CP, Joueur, CoupAFaire) : correspond au premier si de l'algo : on amène le pion au final avec tout le cp
+supplementaireFinal(P, CP, 0,[T,Q]) :- 
+	C is 7-CP,
+	nth0(C, P, Val),
+	Val=[TV,_],
+	TV\=0,
+	T is (C), Q is CP,!.
+	
+supplementaireFinal(P, CP, 1,[T,Q]) :- 
+	nth0(CP, P, Val),
+	Val=[_,QV],
+	QV\=0,
+	T is (CP), Q is (-CP),!.
 
 %Un seul coup qui amène un pion au bout avec tout le CP.
 %IA_best_supplementaire(P, J, [C,L|[]], CP) :-
