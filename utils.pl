@@ -28,8 +28,9 @@ faire_liste_cp(P,Liste) :-
 	intern_faire_liste_cp(P,SuiteListe,6),
 	Liste = [[7,1]|SuiteListe],!.
 % Retourne la case correspondant au CP maximum sur le plateau P
-case_cp_max(P,CaseMax) :-
+case_cp_max(P,CaseMax,CPMax) :-
 	faire_liste_cp(P,Liste),
-	intern_case_cp_max(Liste,UnCaseMax,_),
-	CaseMax = UnCaseMax,!.
+	intern_case_cp_max(Liste,UnCaseMax,UnCPMax),
+	CaseMax = UnCaseMax,
+	CPMax = UnCPMax,!.
 
