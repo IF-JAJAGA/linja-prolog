@@ -56,6 +56,7 @@ case_moins_avancee(P,J,NCase) :-
 	NCase1 is 7*J,
 	intern_case_moins_avancee(P,J,NCase1,NCase).
 
+
 premier_coup_rapide(P,J,Coups) :-
 	joueur_a_pions(P,J,Possible),
 	Deplacement is 1-2*J,
@@ -73,12 +74,16 @@ premier_coup_rapide(P,J,Coups) :-
 
 coup_rapide(P,J,Coups) :-
 	premier_coup_rapide(P,J,PremierCoup),
-	print(PremierCoup),
 	PremierCoup = [[Depart,Deplacement]],
 	Dest is Depart+Deplacement,
-	nombre_pions(P,Dest,CP),
-	print(CP),
-	joueur_a_pions(P,J,CoupPossible),!.
+	nombre_pions(P,Dest,CP),!,
+	(joueur_a_pions(P,J,CasePossible),
+	CPJ is CP * Deplacement,
+	CoupSuivant = [[CasePossible,CPJ]],
+	append(PremierCoup,CoupSuivant,CoupsPossibles),
+	est_licite(P,CoupsPossibles,J),
+	Coups = CoupsPossibles,!;
+	Coups = PremierCoup).
 
 test(CaseMax,CPMax) :-
 	case_cp_max([[6,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]],CaseMax,CPMax).

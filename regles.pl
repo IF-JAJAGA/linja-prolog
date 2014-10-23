@@ -72,7 +72,8 @@ est_licite(P,Coups,J,CP) :-
 	T = [TCoup|QCoup],
 	sur_plateau(Coups),
 	pion_joueur(P,J,Coups),
-	calcul_cp(Coups,CP).
+	CP1 is CP * (1-2*J),
+	calcul_cp(Coups,CP1).
 
 est_licite(P,Coups,J) :-
 	Coups = [T|Q],
@@ -82,9 +83,11 @@ est_licite(P,Coups,J) :-
 	not(case_pleine(P,Arrivee)),
 	sur_plateau(Coups),
 	nombre_pions(P,Arrivee,CP),
-	increment(Arrivee,J,P,P2),!,
-	est_licite(P2,Q, J, CP),
-	decrement(Arrivee,J,P2,P3),!.
+	decrement(Depart,J,P,P2),
+	increment(Arrivee,J,P2,P3),!,
+	est_licite(P3,Q, J, CP),
+	decrement(Arrivee,J,P3,P4),
+	increment(Depart,J,P4,P5),!.
 
 % ======================================== TESTS ==========================================
 :- begin_tests(regles).
