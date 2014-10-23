@@ -105,6 +105,15 @@ trouvermax2([T|Q],CP,I,N) :-
 /*	----- Jérôme -----
  * */
 
+/*
+ * 	Exemples :
+ * [debug]  ?- genererlisteCP([[6,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]], 0, L).
+ * L = [0, 0, 0, 0, 0, 0, 0, 1] ;
+ * [debug]  ?- genererlisteCP([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]], 0, L).
+ * L = [0, 1, 2, 3, 4, 6, 5, 1] ;
+ * [debug]  ?- genererlisteCP([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]], 1, L).
+ * L = [1, 1, 2, 3, 4, 6, 5, 0] .
+ * */
 %genererlisteCP(Plateau, Joueur, ListeSortante).
 genererlisteCP(P, J, L) :- genererlisteCP(P, J, L, 0).
 
