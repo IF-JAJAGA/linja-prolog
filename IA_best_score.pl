@@ -8,11 +8,11 @@ coupIA_ToTheEnd(P,J,L) :-
 	genererliste(0,P,J,LCP),
 	trouvermax(LCP,J,CP,TodoPC),
 	supplementaireFinal(P,CP,J,TodoDC),
-	L = [TodoPC,TodoDC],!.
+	L = [TodoPC|TodoDC],!.
 	
 %fonctions banales pour générer un plateau de ce type
 test(P) :- P = [[2,1],[1,0],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
-plateau(X) :- X = ([[5,0],[0,1],[2,0],[2,1],[1,3],[5,1],[2,3],[0,12]]).
+plateau(X) :- X = ([[5,0],[0,1],[0,0],[2,1],[1,3],[5,0],[2,3],[0,12]]).
 
 
 /*
@@ -101,7 +101,7 @@ trouvermax(L,J,CP,LTODO) :-
 		I2 is I + 1,
 		D is - 1
 	),
-	LTODO = [[I2,D]].
+	LTODO = [I2,D],!.
 
 
 /*Dit la case a bouger.*/
