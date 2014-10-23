@@ -50,10 +50,15 @@ ajusterTetePlateau(0,_,Q,1,PJTA) :-
 /*
 Fonction qui génère une liste de CP correspondant aux colonnes du plateau
 Chaque CP est calculé et ajusté en fonction que la colonne est déjà pleine ou si, en fonction du joueur, aucun pion ne peut arriver sur cette case.
-Elle prend en paramètre la liste de liste qui compose le plateau,
-le numéro du joueur J,
+On gère également les CPs pour les bases adversaires ou de soi-même.
+Elle prend en paramètre le numéro de l'action en cours (donc, à l'appel de la fonction N=0,
+la liste de liste qui compose le plateau,
+le numéro du joueur J (0 ou 1),
 et renvoie la liste L de CPs
+
+Type d'appel : genererliste(0,Plateau,Joueur,ListeRetounée).
 */
+
 genererliste(_,[],_,[]).
 genererliste(N, Plateau, J, L) :-
 	Plateau = [T|Q],
