@@ -1,4 +1,5 @@
 :- use_module(library(lists)).
+:- include('regles.pl').
 
 /*
 Fonction à appeler pour lancer l'IA Best_Score
@@ -8,11 +9,12 @@ coupIA_ToTheEnd(P,J,L) :-
 	genererliste(0,P,J,LCP),
 	trouvermax(LCP,J,CP,TodoPC),
 	supplementaireFinal(P,CP,J,TodoDC),
-	L = [TodoPC|TodoDC],!.
+	L = [TodoPC|TodoDC],
+	est_licite(P,L,0),!.
 	
 %fonctions banales pour générer un plateau de ce type
-test(P) :- P = [[2,1],[1,0],[3,1],[3,3],[1,2],[1,0],[1,4],[0,1]].
-plateau(X) :- X = ([[5,0],[0,1],[0,0],[2,1],[1,3],[5,0],[2,3],[0,12]]).
+test(P) :- P = [[2,1],[1,0],[0,1],[3,3],[0,2],[1,1],[1,3],[0,1]].
+%plateau(X) :- X = ([[5,0],[0,1],[0,0],[2,1],[1,3],[5,0],[2,3],[0,12]]).
 
 
 /*
@@ -187,7 +189,7 @@ Renvoie la liste CoupAFaire de type [Depart,Avancée]
 
 supplementaireFinal(P, CP, 0, LTodo) :- 
 	C is 7-CP,
-	nth0(C, P, Val),
+	nth0(C, P, Val),!,
 	Val=[TV,_],
 	(TV\=0 ->
 		LTodo = [[C,CP]];
@@ -197,19 +199,19 @@ supplementaireFinal(P, CP, 0, LTodo) :-
 			LTodo = [[I,CP]];
 			chercherPlusProche(P,0,0,I1),
 			CNO is CP - CNE,
-			LTodo = [[I1,CNO],[I,CNE]])).
+			LTodo = [[I1,CNO]|[I,CNE]])).
 
 
 supplementaireFinal(P, CP, 1, LTodo) :- 
-	nth0(CP, P, Val),
+	nth0(CP, P, Val),!,
 	Val=[_,QV],
 	(QV\=0 ->
 		LTodo = [[CP,-CP]];
-		chercherPlusEloigne(P,1,0,I),
+		chercherPlusEloigne(P,1,0,I),!,
 		CNE is I,
 		(CNE > CP ->
 			LTodo = [I,-CP];
 			chercherPlusProche(P,1,0,I1),
 			CNO is CP - CNE,
-			LTodo = [[I1,-CNO],[I,-CNE]])).
+			LTodo = [[I1,-CNO]|[I,-CNE]])).
 			
