@@ -1,4 +1,7 @@
 plateau([[12,0],[2,1],[0,0],[2,4],[1,0],[0,6],[3,0],[0,12]]).
+%plateau([[4,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,4]]).
+:-dynamic(ref_cercles/1).
+ref_cercles([]).
 
 print_plateau_tour(Plateau, Tour) :- 	writeln('\n Tour ' + Tour),
 					print_ihm(Plateau).
@@ -33,17 +36,28 @@ print_jeton(N,M) :-
 initialise :-
 	%initialise_database,
 	create_GUI_components,
-	plateau(X),
-	print_GUI_Jetons(X).
+	plateau(X).
+	%print_GUI_Jetons(X).
 	%free_GUI_components.
 	
 	
 init:-
 	create_plateau,
 	plateau(X),
-	print_GUI_Jetons(X,1).
+	print_GUI_Jetons(X,1),
+	get(@p, confirm, @nil),
+	ref_cercles(LC),
+	free_GUI_pions(LC),
+	send(@p,flush).
+	
+nextStep(X):-
+	print_GUI_Jetons(X,1),
+	get(@p, confirm, @nil),
+	ref_cercles(LC),
+	free_GUI_pions(LC),
+	send(@p,flush).
 
-print_GUI_Jetons([]).
+print_GUI_Jetons([],_).
 print_GUI_Jetons([T|Q],NumLine):-
 	print_GUI_line(T,NumLine),
 	Num2 is NumLine + 1,
@@ -59,6 +73,10 @@ print_GUI_pion(N,M,NumLine,Color):-
 	N \==0,
 	%Ajoute le cercle à l'image
 	new(C,circle(25)),
+	ref_cercles(LC),
+	append(LC,[C],NLC),
+	retract(ref_cercles(LC)),
+	assert(ref_cercles(NLC)),
 	send(C,fill_pattern, Color),
 	send(@p, display, C, point(12.5+(50*(NumLine-1)),25+(N*30)+(M*30))),
 	N1 is N -1,
@@ -112,32 +130,11 @@ free_GUI_components :-
 	free(@l5),
 	free(@l6),
 	free(@l7).
-
-%test :-
-	%send(M, x,7).
 	
-	
-ask_name(Name) :-
-	new(D, dialog('Register')),
-	send(D, append(new(NameItem, text_item(name)))),
-	send(D, append(button(ok, message(D, return,
-									  NameItem?selection)))),
-	send(D, append(button(cancel, message(D, return, @nil)))),
-	send(D, default_button(ok)),
-	get(D, confirm, Rval),
-	free(D),
-	Rval \== @nil,
-	Name = Rval.
-
-test(42).
-
-test_repeat :-
-	test(X),
-	print(X),
-	X2 is X-1,
-	X is X2,
-	repeat,
-	nl,
-	print(X2),
-	read(A),
-	(X =:=1).
+free_GUI_pions([]):-
+	ref_cercles(Cercles),
+	retract(ref_cercles(Cercles)),
+	assert(ref_cercles([])).
+free_GUI_pions([T|Q]) :- 
+	free(T),
+	free_GUI_pions(Q).
