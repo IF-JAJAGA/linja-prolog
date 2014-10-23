@@ -1,13 +1,3 @@
-plateau([[12,0],[2,1],[0,0],[2,4],[1,0],[0,6],[3,0],[0,12]]).
-plateau2([[0,12],[0,1],[0,5],[0,0],[1,0],[0,6],[3,0],[0,12]]).
-plateau3([[0,12],[4,1],[0,5],[3,0],[0,0],[7,0],[26,0],[4,0]]).
-plateau4([[0,12],[4,1],[0,5],[3,0],[0,0],[7,0],[26,0],[4,2]]).
-plateau5([[0,12],[4,1],[0,5],[3,0],[0,0],[7,0],[26,6],[4,0]]).
-plateau6([[0,12],[4,1],[0,5],[3,0],[0,0],[7,8],[26,0],[4,0]]).
-test1([[1,2],[3,4],[5, 6],[1,1]]).
-lzero([[12,0],[2,1],[0,0],[2,4]]).
-lun([[12,0],[0,3],[6,0],[0,1]]).
-
 comp_fini([],_,_,_).
 comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	L = [A,B,C,D],
@@ -18,7 +8,9 @@ comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	trouver_gagnant(L0,L1,P0,P1,G),
 	write('P0 = '),writeln(P0),
 	write('P1 = '),writeln(P1),
-	write('G = '),writeln(G).
+	write('G = '),writeln(G),
+	joueurGagnant(Buf),
+	retract(joueurGagnant(Buf)), assert(joueurGagnant(G)).
 
 trouver_gagnant([],[],_,_,_).
 trouver_gagnant(L0,L1,P0,P1,G) :-

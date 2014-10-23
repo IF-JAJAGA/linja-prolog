@@ -1,9 +1,4 @@
-:- include('regles.pl').
-:- include('utils.pl').
-:- include('deplacement.pl').
-:- include('IA_random.pl').
 /*
-
 				      _
 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 							-
@@ -13,7 +8,6 @@ Puis; avec le plus grand CP possible, on bouge uniquement le pion le plus loin
 du milieu.
 
 */
-plateau([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]]).
 
 intern_joueur_a_pions(P,J,NCase) :-
 	NCase1 = NCase,
