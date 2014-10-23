@@ -69,11 +69,14 @@ case_pleine(P,Ncase) :-
 est_licite(_,[],_,_).
 est_licite(P,Coups,J,CP) :-
 	Coups = [T|Q],
-	T = [TCoup|QCoup],
+	T = [Depart,Deplacement],
+	Arrivee is Depart + Deplacement,
+	not(case_pleine(P,Arrivee)),
 	sur_plateau(Coups),
 	pion_joueur(P,J,Coups),
 	CP1 is CP * (1-2*J),
-	calcul_cp(Coups,CP1).
+	calcul_cp(Coups,CP1),
+	est_licite(P,Q,J,CP).
 
 est_licite(P,Coups,J) :-
 	Coups = [T|Q],
