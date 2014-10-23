@@ -87,6 +87,3 @@ coup_rapide(P,J,Coups) :-
 
 test(CaseMax,CPMax) :-
 	case_cp_max([[6,0],[1,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,6]],CaseMax,CPMax).
-
-%generer_premier_coup(P,J) :-
-	% Choisit un premier coup

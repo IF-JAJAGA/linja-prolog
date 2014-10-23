@@ -8,7 +8,7 @@ intern_faire_liste_cp(P,Liste,NCase) :-
 
 % UNIQUEMENT UTILISE PAR intern_case_cp_max
 intern_set_max_cp_and_ncase(MaxCP,MaxNCase,CurrentCP,CurrentNCase,NewCP,NewNCase) :-
-	NewCP > CurrentCP ->
+	NewCP >= CurrentCP ->
 	MaxCP = NewCP,
 	MaxNCase = NewNCase ;
 	MaxCP = CurrentCP,
