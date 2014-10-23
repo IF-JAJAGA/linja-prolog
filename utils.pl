@@ -7,19 +7,25 @@ intern_faire_liste_cp(P,Liste,NCase) :-
 	Liste = [[NCase,NPions]|SuiteListe].
 
 % UNIQUEMENT UTILISE PAR intern_case_cp_max
-intern_set_max_cp_and_ncase(MaxCP,MaxNCase,CurrentCP,CurrentNCase,NewCP,NewNCase) :-
+intern_set_max_cp_and_ncase(0,MaxCP,MaxNCase,CurrentCP,CurrentNCase,NewCP,NewNCase) :-
+	NewCP > CurrentCP ->
+	MaxCP = NewCP,
+	MaxNCase = NewNCase ;
+	MaxCP = CurrentCP,
+	MaxNCase = CurrentNCase.
+intern_set_max_cp_and_ncase(1,MaxCP,MaxNCase,CurrentCP,CurrentNCase,NewCP,NewNCase) :-
 	NewCP >= CurrentCP ->
 	MaxCP = NewCP,
 	MaxNCase = NewNCase ;
 	MaxCP = CurrentCP,
 	MaxNCase = CurrentNCase.
 
-intern_case_cp_max([],_,0).
-intern_case_cp_max(Liste,CaseMax,CPMax) :-
+intern_case_cp_max(_,[],_,0).
+intern_case_cp_max(J,Liste,CaseMax,CPMax) :-
 	Liste = [T|Q],
 	T = [NCase,CP],
-	intern_case_cp_max(Q,UnCaseMax,UnCPMax),
-	intern_set_max_cp_and_ncase(CPMax,CaseMax,UnCPMax,UnCaseMax,CP,NCase).
+	intern_case_cp_max(J,Q,UnCaseMax,UnCPMax),
+	intern_set_max_cp_and_ncase(J,CPMax,CaseMax,UnCPMax,UnCaseMax,CP,NCase).
 
 %============================== PUBLIC ===============================
 
@@ -28,9 +34,9 @@ faire_liste_cp(P,Liste) :-
 	intern_faire_liste_cp(P,SuiteListe,6),
 	Liste = [[7,1]|SuiteListe],!.
 % Retourne la case correspondant au CP maximum sur le plateau P
-case_cp_max(P,CaseMax,CPMax) :-
+case_cp_max(P,J,CaseMax,CPMax) :-
 	faire_liste_cp(P,Liste),
-	intern_case_cp_max(Liste,UnCaseMax,UnCPMax),
+	intern_case_cp_max(J,Liste,UnCaseMax,UnCPMax),
 	CaseMax = UnCaseMax,
 	CPMax = UnCPMax,!.
 
