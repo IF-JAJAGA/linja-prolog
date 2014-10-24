@@ -2,8 +2,7 @@
 plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 :- include('deplacement.pl').
 */
-% TODO: autoriser deplacement vers la derniere case avec trop de CP
-:- module(regles,[est_licite/3]).
+:- module(regles,[est_licite/3,case_pleine/2]).
 :- use_module('utils.pl').
 :- use_module('deplacement.pl').
 
@@ -56,8 +55,19 @@ case_pleine(P,Ncase) :-
 	Npions >= 6.
 
 % Prouve que les coups sont possibles pour le joueur J en CP mouvements.
-intern_est_licite(_,[],_,CP) :-
-	CP == 0.
+intern_est_licite(P,Coups,J,CP) :-
+	Coups = [Coup|[]],
+	Coup = [Depart,PM],
+	Arrivee is Depart + PM,
+	not(case_pleine(P,Arrivee)),
+	sur_plateau(Coups),
+	pion_joueur(P,J,Coups),
+	PM2 is PM * (1-2*J),
+	calcul_cp(PM2,CP,CP2),
+	Extrem is 7*(1-J),
+	(Arrivee == Extrem ->
+	CP2 >= 0;
+	CP2 == 0).
 intern_est_licite(P,Coups,J,CP) :-
 	Coups = [T|Q],
 	T = [Depart,Deplacement],

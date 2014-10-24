@@ -6,7 +6,7 @@
 :- use_module('utils.pl').
 :- use_module('deplacement.pl').
 :- include('ia_rapide.pl').
-:- include('IA_best_score.pl').
+:- include('ia_best.pl').
 
 /*Lancement d'une partie à 20 itérations commencant avec le joueur 0:
 	tour(0,20).
@@ -43,9 +43,9 @@ tour :- 	plat(P),
 		%%Jeu du joueur 1
 		%coup_rapide(P, J1, LTodo1),
 		%write('avant J1'),
-		coupIA_ToTheEnd(P, J1, LTodo1),
+		%coup_best(P, J1, LTodo1),
 		%write('après J1'),
-		%coupIA_random(P,J1,LTodo1),
+		coupIA_random(P,J1,LTodo1),
 		print(LTodo1),
 		modifier(P,J1,LTodo1,Pbuf1),
 		
@@ -62,9 +62,9 @@ tour :- 	plat(P),
 		!,
 
 		%%Jeu du joueur 2
-		coup_rapide(Pbuf1, J2, LTodo2),
-		%coupIA_random(Pbuf1,J2,LTodo2),
-		%coupIA_ToTheEnd(Pbuf1, J2, LTodo2),
+		%coup_rapide(Pbuf1, J2, LTodo2),
+		%coup_best(Pbuf1,J2,LTodo2),
+		coupIA_random(Pbuf1, J2, LTodo2),
 		print(LTodo2),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 
@@ -97,7 +97,7 @@ statistiques(NP0, NP1, NBParties) :-	not(tour),
 					incrementStat(NP0Buf, NP1Buf, G),
 					NBPartiesNew is NBParties-1,
 
-					%retract(plat(P)), assert(plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]])),
+					retract(plat(P)), assert(plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]])),
 
 					statistiques(NP0New, NP1New, NBPartiesNew),
 					NP0 is NP0New + NP0Buf,

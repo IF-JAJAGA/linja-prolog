@@ -9,7 +9,7 @@ Les différentes fonctions implémentées dans ce fichier :
 	- modifier (OldPlateau, NumJoueur, ListeDéplacement, NewPlateau) : Fonction principale modifiant le plateau OldPlateau en fonction de la ListeDéplacements et du NumJoueur.
 			Retourne NewPlateau correspondant à la modification de OldPlateau
 */
-:- module(deplacement, [copy/2,decrement/4,increment/4,findCP/3,modifier/4]).
+:- module(deplacement, [copy/2,decrement/4,increment/4,trouverCP/4,modifier/4]).
 
 
 %copy : copie la première liste dans la deuxième.

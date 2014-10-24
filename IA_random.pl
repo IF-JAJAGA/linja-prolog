@@ -1,4 +1,5 @@
 %:- include('regles.pl').
+:- use_module('deplacement.pl').
 
 /*
 	###	IA Random	###

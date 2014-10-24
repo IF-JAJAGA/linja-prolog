@@ -1,9 +1,9 @@
-%:- use_module(library(lists)).
-%:- include('regles.pl').
-
 /*
 Fonction à appeler pour lancer l'IA Best_Score
 */
+
+:- module(ia_best_utils,[supplementaireFinal/4]).
+:- use_module('regles.pl').
 
 coupIA_ToTheEnd(P,J,L) :-
 	genererliste(0,P,J,LCP),
@@ -135,7 +135,7 @@ chercherPlusEloigne([_|[]],1,N,N).
 chercherPlusEloigne([_|[]],0,_,PO) :-
 	PO is -1.
 chercherPlusEloigne([T|Q],0,N,PO) :-
-	T=[T1|_],
+	T=[T1,_],
 	N1 is N + 1,
 	chercherPlusEloigne(Q,0,N1,PO1),!,
 	(PO1 > 0 ->
@@ -144,15 +144,16 @@ chercherPlusEloigne([T|Q],0,N,PO) :-
 		PO = N;
 		PO is PO1)).
 		
-chercherPlusEloigne([T|Q],1,N,PO) :-
-	T=[_|Q1],
-	N1 is N + 1,
-	chercherPlusEloigne(Q,1,N1,PO1),!,
-	(N == 0 ->
+intern_chercherPlusEloigne([T|Q],1,N,PO) :-
+	T=[_,Q1],
+	(Q1 == 0 ->
+		N1 is N + 1,
+		intern_chercherPlusEloigne(Q,1,N1,PO1),!,
 		PO = PO1;
-		(Q1 > 0 ->
-			PO = N;
-			PO = PO1)).
+		PO = N).
+
+chercherPlusEloigne([T|Q],1,N,PO) :-
+		intern_chercherPlusEloigne(Q,1,N,PO).
 
 /*
 chercherPlusProche permet de trouver le pion du joueur le plus proche de sa base et renvoie sa position
@@ -190,7 +191,6 @@ chercherPlusProche([T|Q],0,N,PO) :-
 supplementaireFinal(Plateau, CP, Joueur, CoupAFaire)
 Renvoie la liste CoupAFaire de type [Depart,Avancée]
 */
-
 supplementaireFinal(P, CP, 0, LTodo) :- 
 	C is 7-CP,
 	nth0(C, P, Val),!,
@@ -201,12 +201,14 @@ supplementaireFinal(P, CP, 0, LTodo) :-
 		CNE is 7 - I,
 		(CNE > CP ->
 			LTodo = [[I,CP]];
-			chercherPlusProche(P,0,0,I1), 
+			%chercherPlusProche(P,0,0,I1), 
 			CNO is CP - CNE,
-			%On vérifie que la colonne d'arrivée n'est pas pleine
-			%getArrivee([I1,CNO|[]], Arrivee),
-			%not(case_pleine(P,Arrivee)),
-			LTodo = [[I1,CNO],[I,CNE]])).
+			joueur_a_pions(P,0,Possible),
+			Arrivee is Possible + CNO,
+			not(case_pleine(P,Arrivee)),
+			(Possible == I ->
+			LTodo = [[I,CNE]];
+			LTodo = [[Possible,CNO],[I,CNE]]))).
 
 
 supplementaireFinal(P, CP, 1, LTodo) :- 
@@ -215,13 +217,16 @@ supplementaireFinal(P, CP, 1, LTodo) :-
 	(QV\=0 ->
 		LTodo = [[CP,-CP]];
 		chercherPlusEloigne(P,1,0,I),!,
-		CNE is I,
+		I2 is I+1,
+		CNE is I2,
 		(CNE > CP ->
-			LTodo = [I,-CP];
-			chercherPlusProche(P,1,0,I1),
+			LTodo = [[I2,-CP]];
+			%chercherPlusProche(P,1,0,I1),
 			CNO is CP - CNE,
-			%On vérifie que la colonne d'arrivée n'est pas pleine
-			%getArrivee([I1,-CNO|[]], Arrivee),
-			%not(case_pleine(P,Arrivee)),
-			LTodo = [[I1,-CNO],[I,-CNE]])).
+			joueur_a_pions(P,1,Possible),
+			Arrivee is Possible - CNO,
+			not(case_pleine(P,Arrivee)),
+			(Possible == I2 ->
+			LTodo = [[I,-CNE]];
+			LTodo = [[Possible,-CNO],[I2,-CNE]]))).
 			
