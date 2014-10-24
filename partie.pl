@@ -41,10 +41,10 @@ tour :- 	plat(P),
 		J2 is 1,
 
 		%%Jeu du joueur 1
-		coup_rapide(P, J1, LTodo1),
-		write('avant J1'),
+		%coup_rapide(P, J1, LTodo1),
+		%write('avant J1'),
 		coupIA_ToTheEnd(P, J1, LTodo1),
-		write('après J1'),
+		%write('après J1'),
 		%coupIA_random(P,J1,LTodo1),
 		print(LTodo1),
 		modifier(P,J1,LTodo1,Pbuf1),

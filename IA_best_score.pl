@@ -11,7 +11,7 @@ coupIA_ToTheEnd(P,J,L) :-
 	modifier(P, J, [TodoPC|[]], Pbuf),
 	supplementaireFinal(Pbuf,CP,J,TodoDC),
 	L = [TodoPC|TodoDC],
-	%est_licite(P,L,J),
+	est_licite(P,L,J),
 	!.
 	
 %fonctions banales pour générer un plateau de ce type
@@ -26,7 +26,7 @@ ou si la colonne est totalement pleine (6 pions dans la colonne)
 
 
 annulerCP(_,6,-6). % annule le CP si le CP calculé est de 6
-annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente
+annulerCP(0,_,-1). % annule le CP s'il n'y a pas de pions à la colonne précédente
 annulerCP(PJ,T,T) :- PJ\=0.
 
 annulerCP(_,_,_,[],[]).
@@ -97,7 +97,7 @@ genererliste(N, Plateau, J, L) :-
 
 %trouvermax(ListeCP,Joueur,CPresultat,ListeTODO)
 trouvermax([],_,_,_).
-trouvermax(P,L,J,CP,LTODO) :-
+trouvermax(L,J,CP,LTODO) :-
 	trouvermaxA(L,CP,I,0),
 	( J == 0 ->
 		I2 is I - 1,
@@ -105,13 +105,9 @@ trouvermax(P,L,J,CP,LTODO) :-
 		I2 is I + 1,
 		D is - 1
 	),
-	(I2 == -1 ->
-		nth0(I3,L,-6),
-		nth0(I3,P,Val),
-		Val = [TT|_],
-		(TT \= 0 ->
-			I2 is I3,
-	LTODO = [I2,D],!.
+	LTODO = [I2,D].
+			
+	
 
 
 /*Dit la case a bouger.*/
@@ -208,9 +204,8 @@ supplementaireFinal(P, CP, 0, LTodo) :-
 			chercherPlusProche(P,0,0,I1), 
 			CNO is CP - CNE,
 			%On vérifie que la colonne d'arrivée n'est pas pleine
-			getArrivee([I1,CNO|[]], Arrivee),
-			not(case_pleine(P,Arrivee)),
-
+			%getArrivee([I1,CNO|[]], Arrivee),
+			%not(case_pleine(P,Arrivee)),
 			LTodo = [[I1,CNO],[I,CNE]])).
 
 
@@ -226,9 +221,7 @@ supplementaireFinal(P, CP, 1, LTodo) :-
 			chercherPlusProche(P,1,0,I1),
 			CNO is CP - CNE,
 			%On vérifie que la colonne d'arrivée n'est pas pleine
-			getArrivee([I1,-CNO|[]], Arrivee),
-			not(case_pleine(P,Arrivee)),
-
-
+			%getArrivee([I1,-CNO|[]], Arrivee),
+			%not(case_pleine(P,Arrivee)),
 			LTodo = [[I1,-CNO],[I,-CNE]])).
 			
