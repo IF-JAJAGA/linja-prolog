@@ -43,13 +43,14 @@ tour() :- 	plat(P),
 		%%Jeu du joueur 1
 		%coup_rapide(P, J1, LTodo1),
 		write('avant J1'),
-		%coupIA_ToTheEnd(P, J1, LTodo1),
+		coupIA_ToTheEnd(P, J1, LTodo1),
 		write('après J1'),
-		coupIA_random(P,J1,LTodo1),
+		%coupIA_random(P,J1,LTodo1),
 		print(LTodo1),
 		modifier(P,J1,LTodo1,Pbuf1),
 		
 		write('\nPlateau après un coup du joueur 1.'),
+		print(Pbuf1),
 		print_plateau_tour(Pbuf1, N),
 		%nextStep(Pbuf1),
 		%sleep(3),
@@ -68,6 +69,7 @@ tour() :- 	plat(P),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 
 		write('\nPlateau après un coup du joueur 2.'),
+		print(Pbuf2),
 		print_plateau_tour(Pbuf2, N),
 		
 		%sleep(3),
@@ -95,7 +97,7 @@ statistiques(NP0, NP1, NBParties) :-	not(tour),
 					incrementStat(NP0Buf, NP1Buf, G),
 					NBPartiesNew is NBParties-1,
 
-					retract(plat(P)), assert(plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]])),
+					%retract(plat(P)), assert(plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]])),
 
 					statistiques(NP0New, NP1New, NBPartiesNew),
 					NP0 is NP0New + NP0Buf,

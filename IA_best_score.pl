@@ -8,9 +8,11 @@ Fonction à appeler pour lancer l'IA Best_Score
 coupIA_ToTheEnd(P,J,L) :-
 	genererliste(0,P,J,LCP),
 	trouvermax(LCP,J,CP,TodoPC),
-	supplementaireFinal(P,CP,J,TodoDC),
+	modifier(P, J, [TodoPC|[]], Pbuf),
+	supplementaireFinal(Pbuf,CP,J,TodoDC),
 	L = [TodoPC|TodoDC],
-	est_licite(P,L,J),!.
+	%est_licite(P,L,J),
+	!.
 	
 %fonctions banales pour générer un plateau de ce type
 test(P) :- P = [[2,1],[1,0],[0,1],[0,3],[0,2],[1,1],[1,3],[0,1]].
@@ -23,7 +25,7 @@ ou si la colonne est totalement pleine (6 pions dans la colonne)
 */
 
 
-annulerCP(_,6,0). % annule le CP si le CP calculé est de 6
+annulerCP(_,6,-6). % annule le CP si le CP calculé est de 6
 annulerCP(0,_,0). % annule le CP s'il n'y a pas de pions à la colonne précédente
 annulerCP(PJ,T,T) :- PJ\=0.
 
@@ -92,10 +94,10 @@ genererliste(N, Plateau, J, L) :-
 
 
 /* Il trouve la case où on obtient un Capital de Points plus grand. Il retourne une liste avec la liste de mouvements (soit 1 mouvement) à faire (listeTODO) et le capital de points à obtenir */
-	
+
 %trouvermax(ListeCP,Joueur,CPresultat,ListeTODO)
 trouvermax([],_,_,_).
-trouvermax(L,J,CP,LTODO) :-
+trouvermax(P,L,J,CP,LTODO) :-
 	trouvermaxA(L,CP,I,0),
 	( J == 0 ->
 		I2 is I - 1,
@@ -103,6 +105,12 @@ trouvermax(L,J,CP,LTODO) :-
 		I2 is I + 1,
 		D is - 1
 	),
+	(I2 == -1 ->
+		nth0(I3,L,-6),
+		nth0(I3,P,Val),
+		Val = [TT|_],
+		(TT \= 0 ->
+			I2 is I3,
 	LTODO = [I2,D],!.
 
 
@@ -197,8 +205,12 @@ supplementaireFinal(P, CP, 0, LTodo) :-
 		CNE is 7 - I,
 		(CNE > CP ->
 			LTodo = [[I,CP]];
-			chercherPlusProche(P,0,0,I1),
+			chercherPlusProche(P,0,0,I1), 
 			CNO is CP - CNE,
+			%On vérifie que la colonne d'arrivée n'est pas pleine
+			getArrivee([I1,CNO|[]], Arrivee),
+			not(case_pleine(P,Arrivee)),
+
 			LTodo = [[I1,CNO],[I,CNE]])).
 
 
@@ -213,5 +225,10 @@ supplementaireFinal(P, CP, 1, LTodo) :-
 			LTodo = [I,-CP];
 			chercherPlusProche(P,1,0,I1),
 			CNO is CP - CNE,
+			%On vérifie que la colonne d'arrivée n'est pas pleine
+			getArrivee([I1,-CNO|[]], Arrivee),
+			not(case_pleine(P,Arrivee)),
+
+
 			LTodo = [[I1,-CNO],[I,-CNE]])).
 			
