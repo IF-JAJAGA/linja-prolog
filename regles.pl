@@ -1,7 +1,7 @@
-:- dynamic plateau/1.
+/*:- dynamic plateau/1.
 plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 :- include('deplacement.pl').
-
+*/
 % TODO: autoriser deplacement vers la derniere case avec trop de CP
 
 

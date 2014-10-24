@@ -1,4 +1,4 @@
-:- include('regles.pl').
+%:- include('regles.pl').
 
 /*
 	###	IA Random	###
@@ -114,6 +114,8 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 0,
 							nth0(Col,LCols,C),
 							random_entre(1,CP,L1),
 							pasDepasserPlateau(7, C, L1, L),
+							getArrivee([C,L|[]], Arrivee),
+							not(case_pleine(Lpl,Arrivee)),
 							NCP is CP - L,
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
@@ -127,6 +129,9 @@ supplementaireCoupIA_random(Lpl, J, [[C,L]|Q],CP) :- 	J == 1,
 							pasDepasserPlateau(0, C, L1, L2),
 							NCP is CP - L2,
 							L is -L2,
+							getArrivee([C,L|[]], Arrivee),
+							not(case_pleine(Lpl,Arrivee)),
+
 							modifier(Lpl, J, [[C,L]|[]], LPlBuf),
 							supplementaireCoupIA_random(LPlBuf, J, Q, NCP).
 /*

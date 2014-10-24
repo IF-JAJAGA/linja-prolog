@@ -1,5 +1,5 @@
-:- use_module(library(lists)).
-:- include('regles.pl').
+%:- use_module(library(lists)).
+%:- include('regles.pl').
 
 /*
 Fonction à appeler pour lancer l'IA Best_Score
