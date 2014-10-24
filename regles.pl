@@ -3,6 +3,9 @@ plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 :- include('deplacement.pl').
 */
 % TODO: autoriser deplacement vers la derniere case avec trop de CP
+:- module(regles,[est_licite/3]).
+:- use_module('utils.pl').
+:- use_module('deplacement.pl').
 
 
 % Prouve que l'element d'indice N a pour valeur Val dans List.
@@ -13,7 +16,7 @@ plateau([[12,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,12]]).
 %	N1 is N-1,
 %	nth_element(N1,Val,Q).
 
-% Prouve que la liste de coups consomme CP points de mouvement.
+% Prouve qu'il reste CP1 points de mouvement après avoir utilisé Deplacement points sur les CP points au total
 calcul_cp(Deplacement,CP,CP1) :-
 	CP1 is CP - Deplacement.
 
@@ -44,12 +47,6 @@ pion_joueur(P,J,Coups) :-
 	Npions > 0,
 	pion_joueur(P,J,Q),!.
 
-% Prouve que la case Ncase a Npions
-nombre_pions(P,Ncase,Npions) :-
-	nth0(Ncase,P,Case),
-	nth0(0,Case,P0),
-	nth0(1,Case,P1),
-	Npions is P0 + P1.
 
 % Prouve que la case est pleine, toujours faux si l'on est dans les extrémités du plateau
 case_pleine(P,Ncase) :-

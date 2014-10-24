@@ -9,6 +9,7 @@ Les différentes fonctions implémentées dans ce fichier :
 	- modifier (OldPlateau, NumJoueur, ListeDéplacement, NewPlateau) : Fonction principale modifiant le plateau OldPlateau en fonction de la ListeDéplacements et du NumJoueur.
 			Retourne NewPlateau correspondant à la modification de OldPlateau
 */
+:- module(deplacement, [copy/2,decrement/4,increment/4,findCP/3,modifier/4]).
 
 
 %copy : copie la première liste dans la deuxième.
@@ -24,25 +25,11 @@ decrement(1,[H|Qo],[H|Qn]) :- decrement(0, Qo, Qn).	%Joueur2
 decrement(0,J,[Vo|O],[Vn|N]) :- decrement(J,Vo,Vn), copy(O,N).	%On arrive à la bonne colonne.
 decrement(C,J,[H|O],[H|N]) :- C1 is C-1, decrement(C1,J,O,N).
 
-%two parameters version for using retract and assert
-decrement(C,J) :-
-				plateau(Old),
-				decrement(C,J,Old,New),
-				retract(plateau(Old)),
-				assert(plateau(New)).
-
 %Ajout du pion joué par le joueur J de la colonne C du plateau.
 increment(0,[Ho|Q],[Hn|Q]) :- Hn is Ho+1.		%Joueur1
 increment(1,[H|Qo],[H|Qn]) :- increment(0, Qo, Qn).	%Joueur2
 increment(0,J,[Vo|O],[Vn|N]) :- increment(J,Vo,Vn), copy(O,N).	%On arrive à la bonne colonne.
 increment(C,J,[H|O],[H|N]) :- C1 is C-1, increment(C1,J,O,N).
-
-%two parameters version for using retract and assert
-increment(C,J) :-
-				plateau(Old),
-				increment(C,J,Old,New),
-				retract(plateau(Old)),
-				assert(plateau(New)).
 
 %Liste de test pour increment/decrement	[[1,2], [3,4], [5,6], [7,8]]
 

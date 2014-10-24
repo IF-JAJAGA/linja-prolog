@@ -2,6 +2,8 @@
 /*On compare si le jeu est fini, donc si un des deux joeurs a deplacé tous ces pions plus loin de la moitié. Si le jeu est fini il compte les points de chaque joueur et il les retourne, en retournant aussi le numéro du joueur qui a gagné.
 comp_fini(Plateau,PointsJ0,PointsJ1,Gagnant) */
 
+:- module(gagnant,[comp_fini/4]).
+
 comp_fini([],_,_,_).
 comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	L = [A,B,C,D],

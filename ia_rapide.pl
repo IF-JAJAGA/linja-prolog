@@ -11,19 +11,9 @@ du milieu.
 
 */
 
-intern_joueur_a_pions(P,J,NCase) :-
-	NCase1 = NCase,
-	nth0(NCase1,P,Case),
-	nth0(J,Case,Npions),
-	Npions > 0.
+:- use_module('utils.pl').
+:- use_module('regles.pl').
 
-% Prouve que le joueur J a au moins un pion sur la case NCase
-joueur_a_pions(P,0,NCase) :-
-	intern_joueur_a_pions(P,0,NCase).
-joueur_a_pions(P,1,NCase) :-
-	reverse(P,P2),
-	intern_joueur_a_pions(P2,1,NCase1),
-	NCase is 7-NCase1.
 
 premier_coup_rapide(P,J,Coups) :-
 	joueur_a_pions(P,J,Possible),
