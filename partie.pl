@@ -29,11 +29,11 @@ joueurGagnant(0).
 
 jeu:-
 	create_plateau,
-	tour,
+	tourgraph,
 	free_GUI_components.
 
-tour(_,0).
-tour :- 	plat(P),
+%tour(_,0).
+tourstats :- 	plat(P),
 			
 		%nextStep(P),
 		tourNumero(N),
@@ -84,13 +84,67 @@ tour :- 	plat(P),
 		N1 is N+1,
 		retract(tourNumero(N)), assert(tourNumero(N1)),
 		
-		tour.
+		tourstats.
+
+tourgraph :- 	plat(P),
+			
+		nextStep(P),
+		tourNumero(N),
+		J1 is 0,
+		J2 is 1,
+
+		%%Jeu du joueur 1
+		%coup_rapide(P, J1, LTodo1),
+		%write('avant J1'),
+		%coup_best(P, J1, LTodo1),
+		%write('après J1'),
+		coupIA_random(P,J1,LTodo1),
+		print(LTodo1),
+		modifier(P,J1,LTodo1,Pbuf1),
+		
+		write('\nPlateau après un coup du joueur 1.'),
+		print(Pbuf1),
+		print_plateau_tour(Pbuf1, N),
+		nextStep(Pbuf1),
+		%sleep(3),
+		
+		!,
+
+		not(comp_fini(Pbuf1, P0, P1, G)),
+
+		!,
+
+		%%Jeu du joueur 2
+		%coup_rapide(Pbuf1, J2, LTodo2),
+		%coup_best(Pbuf1,J2,LTodo2),
+		coupIA_random(Pbuf1, J2, LTodo2),
+		print(LTodo2),
+		modifier(Pbuf1,J2,LTodo2,Pbuf2),
+
+		write('\nPlateau après un coup du joueur 2.'),
+		print(Pbuf2),
+		print_plateau_tour(Pbuf2, N),
+		
+		%sleep(3),
+		
+		!,
+
+		not(comp_fini(Pbuf1, P0, P1, G)),
+
+		!,
+
+		retract(plat(P)), assert(plat(Pbuf2)),
+		N1 is N+1,
+		retract(tourNumero(N)), assert(tourNumero(N1)),
+		
+		tourgraph.
+
 %incrementStat(NP0, NP1, 0)
 incrementStat(1, 0, 0). 
 incrementStat(0, 1, 1).
 incrementStat(0, 0, 2).
 statistiques(0,0,0).
-statistiques(NP0, NP1, NBParties) :-	not(tour),
+statistiques(NP0, NP1, NBParties) :-	not(tourstats),
 					!,
 
 					joueurGagnant(G),
