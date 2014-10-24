@@ -1,3 +1,7 @@
+
+/*On compare si le jeu est fini, donc si un des deux joeurs a deplacé tous ces pions plus loin de la moitié. Si le jeu est fini il compte les points de chaque joueur et il les retourne, en retournant aussi le numéro du joueur qui a gagné.
+comp_fini(Plateau,PointsJ0,PointsJ1,Gagnant) */
+
 comp_fini([],_,_,_).
 comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	L = [A,B,C,D],
@@ -12,6 +16,8 @@ comp_fini([A,B,C,D|LA],P0,P1,G) :-
 	joueurGagnant(Buf),
 	retract(joueurGagnant(Buf)), assert(joueurGagnant(G)).
 
+/*Il trouve le gagnant parmis deux joeurs...............
+trouver_gagnant(......................) */	
 trouver_gagnant([],[],_,_,_).
 trouver_gagnant(L0,L1,P0,P1,G) :-
 	compter_points(L0,5,P0),
@@ -22,7 +28,8 @@ trouver_gagnant(L0,L1,P0,P1,G) :-
 		G is 1;
 	G is 2)).
 	
-	
+/*Il inverse les termes des listes qui font parti d'une liste de listes.
+inverser_termes(ListeInitiale,ListeResultante) */	
 inverser_termes([],L) :- 
 	L = [].
 inverser_termes([T|Q],L) :-
@@ -30,14 +37,16 @@ inverser_termes([T|Q],L) :-
 	inverser_termes(Q,P),
 	L = [R|P].
 
+/*Ça verifie si tous les premiers termes de chaque liste incluse dans une liste de listes est 0.
+fini(NombreDuTermeAnterieur,Liste) */
 fini(0,[]).
 fini(0,[T|Q]) :- 
 	T = [TT|TQ],
 	fini(TT,Q).
 
-% il faut appeler avec la liste 2 inversée ses termes et elle aussi inversé.
-% on compte de 5 a 2.
 
+/*Compter_points retourne le nombre de points dans une liste de listes, pour le premier terme de chaque sou-liste, en suivant le régles du jeu.
+compter_points(ListeInitiale,PointsColonne,PointsCumulés). */
 compter_points(_,1,P) :-
 	P is 0.
 compter_points([T|Q],5,P) :-
@@ -51,7 +60,4 @@ compter_points([T|Q],PC,P) :-
 	PC2 is PC - 1,
 	compter_points(Q,PC2,PA),
 	P is PA + P2.
-	
-	
-% fonction "fini" : le jeu est fini ? --> utiliser la fonction reverse deux fois (petite et grande liste)!
-% fonction "gagnant" : calculer les points de chaque jou
+
