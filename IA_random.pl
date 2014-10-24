@@ -1,6 +1,3 @@
-%:- include('regles.pl').
-:- use_module('deplacement.pl').
-
 /*
 	###	IA Random	###
 	- premier coup (fonction premierCoupIA_random): random sur les pions que l'on peut déplacer (= random sur la colonne)
@@ -17,7 +14,7 @@ pionsJ(0, [X|_], X).
 pionsJ(1,[_|Q], X) :- pionsJ(0, Q, X).
 
 /*
- * coupsPossibles renvoie la listes des colonnes qui contiennent au moins un pion du joueur J  possible à déplacer.
+ * coupsPossibles renvoie la listes des colonnes qui contiennent au moins un pion du joueur J possible à déplacer.
  */
 coupsPossibles(J, [H|LPlQ], L) :- coupsPossibles(J, [H|LPlQ], L, 0).	%Initialisation
 
@@ -170,8 +167,8 @@ concat([X|L1] , L2, [X|L3]) :- concat(L1,L2,L3).
 /*
  * Fonction appelée par partie.pl
  * */
-coupIA_random(P,J, LTodo) :- 	premierCoupIA_random(P, J, LTodo1, CP),
-				modifier(P, J, LTodo1, Pbuf),
-				supplementaireCoupIA_random(Pbuf, J, LTodo2, CP),
+coupIA_random(P,J, LTodo) :- 	premierCoupIA_random(P, J, LTodo1, CP),		%Calcul du premier coup.
+				modifier(P, J, LTodo1, Pbuf),			%Création d'un plateau Pbuf qui a déjà été modifié par premierCoupIA_random
+				supplementaireCoupIA_random(Pbuf, J, LTodo2, CP),	%Calcul des coups supplémentaire.
 				epurerTodo(LTodo2, LTodoBuf, J),
 				concat(LTodo1, LTodoBuf, LTodo).

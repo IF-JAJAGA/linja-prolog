@@ -27,10 +27,6 @@ plat([[6,0],[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[0,6]]).
 tourNumero(0).
 joueurGagnant(0).
 
-jeu:-
-	create_plateau,
-	tourgraph,
-	free_GUI_components.
 
 %tour(_,0).
 tourstats :- 	plat(P),
@@ -41,8 +37,8 @@ tourstats :- 	plat(P),
 		J2 is 1,
 
 		%%Jeu du joueur 1
-		coup_rapide(P, J1, LTodo1),
-		%coup_best(P, J1, LTodo1),
+		%coup_rapide(P, J1, LTodo1),
+		coup_best(P, J1, LTodo1),
 		%coupIA_random(P,J1,LTodo1),
 		modifier(P,J1,LTodo1,Pbuf1),
 		/*
@@ -58,8 +54,8 @@ tourstats :- 	plat(P),
 
 		%%Jeu du joueur 2
 		%coup_rapide(Pbuf1, J2, LTodo2),
-		%coup_best(Pbuf1,J2,LTodo2),
-		coupIA_random(Pbuf1, J2, LTodo2),
+		coup_best(Pbuf1,J2,LTodo2),
+		%coupIA_random(Pbuf1, J2, LTodo2),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 		/*
 		write('\nPlateau après un coup du joueur 2.'),
@@ -87,18 +83,13 @@ tourgraph :- 	plat(P),
 
 		%%Jeu du joueur 1
 		%coup_rapide(P, J1, LTodo1),
-		%write('avant J1'),
 		%coup_best(P, J1, LTodo1),
-		%write('après J1'),
 		coupIA_random(P,J1,LTodo1),
-		print(LTodo1),
 		modifier(P,J1,LTodo1,Pbuf1),
 		
 		write('\nPlateau après un coup du joueur 1.'),
-		print(Pbuf1),
 		print_plateau_tour(Pbuf1, N),
 		nextStep(Pbuf1),
-		%sleep(3),
 		
 		!,
 
@@ -107,17 +98,14 @@ tourgraph :- 	plat(P),
 		!,
 
 		%%Jeu du joueur 2
-		%coup_rapide(Pbuf1, J2, LTodo2),
+		coup_rapide(Pbuf1, J2, LTodo2),
 		%coup_best(Pbuf1,J2,LTodo2),
-		coupIA_random(Pbuf1, J2, LTodo2),
+		%coupIA_random(Pbuf1, J2, LTodo2),
 		print(LTodo2),
 		modifier(Pbuf1,J2,LTodo2,Pbuf2),
 
 		write('\nPlateau après un coup du joueur 2.'),
-		print(Pbuf2),
 		print_plateau_tour(Pbuf2, N),
-		
-		%sleep(3),
 		
 		!,
 
@@ -131,7 +119,20 @@ tourgraph :- 	plat(P),
 		
 		tourgraph.
 
-%incrementStat(NP0, NP1, 0)
+/*
+Lance une partie avec l'interface XPCE.
+*/
+jeu:-
+	create_plateau,
+	tourgraph,
+	free_GUI_components.
+
+/*
+statistiques permet d'exécuter NBParties et renvoie les résultats :
+	NP0 nombre de parties gagnées par le joueur 0,
+	NP1 nombre de parties gagnées par le joueur 1,
+	N le cumulé du nombre de coups de chaque parties.
+*/
 incrementStat(1, 0, 0). 
 incrementStat(0, 1, 1).
 incrementStat(0, 0, 2).

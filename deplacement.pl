@@ -54,31 +54,6 @@ findCP(C, [_|Q], CP) :- C > 0, C < 7, C1 is C-1, findCP(C1, Q, CP).
 elem1([X|_],X).
 elem2([_|Q], X) :- elem1(Q,X).
 
-/*
-modifier(Lpl, 0, J, [L1|[]], CP, LNpl) :- 	elem1(L1,C1),
-						decrement(C1, J, Lpl, Lbuf),
-						elem2(L1, C2),
-						Cend is C1+C2,
-						increment(Cend, J, Lbuf, LNpl),
-						findCP(Cend, LNpl, CP).
-
-
-modifier(Lpl, _, J, [L1|[]], 1, LNpl) :-	elem1(L1,C1),
-						decrement(C1, J, Lpl, Lbuf1),elem2(L1, C2),
-						elem2(L1, C2),
-						Cend is C1+C2,
-						increment(Cend, J, Lbuf1, Lbuf2),
-						copy(Lbuf2, LNpl).
-
-modifier(Lpl, Ac, J, [L1|Qtodo], CP, LNpl) :-	elem1(L1,C1),
-						decrement(C1, J, Lpl, Lbuf1),
-						elem2(L1, C2),
-						Cend is C1+C2,
-						increment(Cend, J, Lbuf1, Lbuf2),
-						CP1 is CP-1,
-						modifier(Lbuf2, Ac, J, Qtodo, CP1, Lbuf3),
-						copy(Lbuf3, LNpl).
-*/
 modifier(L,_,[],L).
 modifier(Lpl, J, [L1|[]], LNpl) :-	elem1(L1,C1),
 						decrement(C1, J, Lpl, Lbuf1),
@@ -94,17 +69,3 @@ modifier(Lpl, J, [L1|Qtodo], LNpl) :-	elem1(L1,C1),
 						increment(Cend, J, Lbuf1, Lbuf2),
 						modifier(Lbuf2, J, Qtodo, Lbuf3),
 						copy(Lbuf3, LNpl).
-						
-/*	TOREAD : tests pour modifier :
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, 0, [[1,1], [1,2]], 2, LNpl).
-LNpl = [[1, 2], [1, 4], [6, 6], [8, 8]] .
-
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 0, [[1,1], [1,1]], LNpl).
-LNpl = [[1, 2], [1, 4], [7, 6], [7, 8]] .
-
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 0, [[1,2], [1,2], [1,2]], LNpl).
-LNpl = [[1, 2], [0, 4], [5, 6], [10, 8]] .
-
-[debug]  ?- modifier([[1,2], [3,4], [5,6], [7,8]], 1, [[1,2], [1,2], [1,2], [1,2]], LNpl).
-LNpl = [[1, 2], [3, 0], [5, 6], [7, 12]] .
-*/
